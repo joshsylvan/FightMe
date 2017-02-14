@@ -12,9 +12,9 @@ public class LoadGestures : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		LoadFile ("test.csv");
-		RotateGestureRoundPoint (gestures[0], HMD);
-		RotateGestureRoundPoint (gestures[1], HMD);
+		LoadFile ("20point.csv");
+//		RotateGestureRoundPoint (gestures[0], HMD);
+//		RotateGestureRoundPoint (gestures[1], HMD);
 	}
 	
 	// Update is called once per frame
@@ -64,6 +64,8 @@ public class LoadGestures : MonoBehaviour {
 
 
 	}
+
+
 
 	void RotateGestureRoundPoint(GameObject GO, GameObject point){
 

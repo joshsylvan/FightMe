@@ -192,6 +192,20 @@ public class GestureRecorder : MonoBehaviour {
 				obj.transform.position.z - HMD.transform.position.z
 			));
 			rightControllerRotations.Add (obj.transform.rotation);
+
+			//MATRIXMETHOD
+
+			Matrix4x4 pointMatrix = HMD.transform.worldToLocalMatrix * obj.transform.localToWorldMatrix;
+			rightControllerPoints.Add(new Point(
+				pointMatrix.GetPosition().x,
+				pointMatrix.GetPosition().y,
+				pointMatrix.GetPosition().z
+			));
+
+
+
+
+
 		} else { //left
 			leftControllerPoints.Add(new Point(
 				obj.transform.position.x - HMD.transform.position.x,
