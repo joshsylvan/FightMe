@@ -8,10 +8,6 @@ public class GestureRecorder : MonoBehaviour {
 	List<Quaternion> rightControllerRotations, leftControllerRotations;
 	float ogCountown = 0;
 	float countdownRight, countdownLeft;
-	bool setAnchorRight = false, setAnchorLeft = false;
-	float ogX_Right, ogX_Left;
-	float ogY_Right, ogY_Left;
-	float ogZ_Right, ogZ_Left;
 
 	public GameObject rightHand, leftHand;
 	SteamVR_TrackedObject rightTrackedObject, leftTrackedObject;
@@ -73,7 +69,8 @@ public class GestureRecorder : MonoBehaviour {
 	void RightControllerRecorder(){
 		rightController = SteamVR_Controller.Input ((int)rightTrackedObject.index);
 
-		if (rightController.GetPress (SteamVR_Controller.ButtonMask.Trigger)) {
+		if (rightController.GetPress (SteamVR_Controller.ButtonMask.Grip)) {
+			rightController.TriggerHapticPulse (1000, Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad);
 			Debug.Log ("Recording points");
 			countdownRight -= Time.deltaTime;
 			if (countdownRight <= 0) {
@@ -81,7 +78,7 @@ public class GestureRecorder : MonoBehaviour {
 				AddPoint (rightTrackedObject, HMD);
 			}
 		}
-		if (rightController.GetPressUp (SteamVR_Controller.ButtonMask.Trigger)) {
+		if (rightController.GetPressUp (SteamVR_Controller.ButtonMask.Grip)) {
 			// Narrow the gesture down to 10 points.
 			Point[] gesturePosition = NormalizeListPosition (rightControllerPoints, 20);
 			Quaternion[] gestureRotation = NormalizeListRotation (rightControllerRotations, 20);
@@ -186,11 +183,11 @@ public class GestureRecorder : MonoBehaviour {
 		if (obj.Equals (rightTrackedObject)) { //right
 
 
-			rightControllerPoints.Add(new Point(
-				obj.transform.position.x - HMD.transform.position.x,
-				obj.transform.position.y - HMD.transform.position.y,
-				obj.transform.position.z - HMD.transform.position.z
-			));
+			//rightControllerPoints.Add(new Point(
+			//	obj.transform.position.x - HMD.transform.position.x,
+			//	obj.transform.position.y - HMD.transform.position.y,
+			//	obj.transform.position.z - HMD.transform.position.z
+			//));
 			rightControllerRotations.Add (obj.transform.rotation);
 
 			//MATRIXMETHOD

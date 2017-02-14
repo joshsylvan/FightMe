@@ -22,9 +22,13 @@ public class PlayerControllers : MonoBehaviour {
 	void Update () {
 		if (rightTrackedObject.isActiveAndEnabled) {
 			rightController = SteamVR_Controller.Input ((int)rightTrackedObject.index);
+		} else {
+			rightController = null;
 		}
 		if (leftTrackedObject.isActiveAndEnabled) {
 			leftController = SteamVR_Controller.Input ((int)leftTrackedObject.index);
+		} else {
+			leftController = null;
 		}
 	}
 
@@ -46,6 +50,14 @@ public class PlayerControllers : MonoBehaviour {
 
 	public bool AreBothControllersConnected(){
 		return rightController != null && leftController != null;
+	}
+
+	public bool IsRightControllerConnected(){
+		return rightController != null;
+	}
+
+	public bool IsLeftControllerConnected(){
+		return leftController != null;
 	}
 
 }

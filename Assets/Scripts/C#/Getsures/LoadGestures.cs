@@ -12,9 +12,7 @@ public class LoadGestures : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		LoadFile ("20point.csv");
-//		RotateGestureRoundPoint (gestures[0], HMD);
-//		RotateGestureRoundPoint (gestures[1], HMD);
+		LoadFile ("test.csv");
 	}
 	
 	// Update is called once per frame
@@ -66,31 +64,6 @@ public class LoadGestures : MonoBehaviour {
 	}
 
 
-
-	void RotateGestureRoundPoint(GameObject GO, GameObject point){
-
-		GameObject[] nodes = new GameObject[GO.transform.childCount];
-
-		for (int i = 0; i < nodes.Length; i++) {
-			nodes [i] = GO.transform.GetChild (i).gameObject;
-
-			//Rotate child round POINT
-
-			nodes [i].transform.RotateAround (HMD.transform.position, Vector3.up, transform.rotation.eulerAngles.y);
-
-			Transform t = nodes [i].transform;
-			float x = t.position.x;
-			float z = t.position.z;
-
-			nodes [i].transform.position = new Vector3 (
-				z * Mathf.Sin (HMD.transform.rotation.y) + x * Mathf.Cos (HMD.transform.rotation.y),
-				t.position.y,
-				z * Mathf.Cos (HMD.transform.rotation.y) - x * Mathf.Sin (HMD.transform.rotation.y)
-			);
-
-		}
-
-	}
 
 
 }
