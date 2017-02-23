@@ -21,6 +21,9 @@ public class GestureRecorder : MonoBehaviour {
 
 	ComboRecorder comboRecorder;
 
+	int fileIndex = 0;
+	string name = "Josh";
+
 	void Awake(){
 		if (inVR) {
 			rightTrackedObject = rightHand.GetComponent<SteamVR_TrackedObject> ();
@@ -99,6 +102,12 @@ public class GestureRecorder : MonoBehaviour {
 			GestureClassifier classifier = new GestureClassifier();
 			classifiedGesturesRight = classifier.Classify (unclassifiedGesturesRight, classifiedGesturesRight, 0.5f, 200);
 			f.GestureOutput (classifiedGesturesRight, "test");
+		}
+		if (Input.GetKeyUp (KeyCode.O)) {
+			FileOutput f = new FileOutput ();
+			f.GestureOutput (unclassifiedGesturesRight, name + "-" + fileIndex);
+			unclassifiedGesturesRight = new List<Gesture> ();
+			Debug.Log ("Output Unclassified Gestures");
 		}
 
 	}

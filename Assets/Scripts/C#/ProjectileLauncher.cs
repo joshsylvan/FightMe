@@ -8,7 +8,8 @@ public class ProjectileLauncher : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		player = GameObject.Find ("Camera (eye)");
+//		player = GameObject.Find ("Camera (eye)");
+		player = GameObject.Find ("Player");
 		projectile = Resources.Load ("Prefab/Projectiles/Arrow") as GameObject;
 		coolDown = OGCooldown;
 	}

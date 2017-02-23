@@ -6,6 +6,10 @@ public class TargetManager : MonoBehaviour {
 
 	GameObject[] layer1, layer2;
 
+	int state = 0;
+
+	public GameObject arrowLauncher;
+
 	// Use this for initialization
 	void Start () {
 		layer1 = new GameObject[transform.GetChild(0).childCount];
@@ -17,12 +21,88 @@ public class TargetManager : MonoBehaviour {
 		for (int i = 0; i < layer2.Length; i++) {
 			layer2 [i] = transform.GetChild (1).GetChild (i).gameObject;
 		}
-		ShowDiagonalLeft ();
+		arrowLauncher.SetActive(false);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+
+		if (Input.GetKeyUp (KeyCode.Space)) {
+			state++;
+			switch (state) {
+			case 0:
+				ShowAllTargets ();
+				break;
+			case 1:
+				ShowHorizontal ();
+				break;
+			case 2:
+				ShowVertical ();
+				break;
+			case 3:
+				ShowDiagonalLeft ();
+				break;
+			case 4:
+				ShowDiagonalRight ();
+				break;
+			case 5:
+				ShowLayer2 ();
+				break;
+			case 6:
+				HideAllTargets ();
+				break;
+			}
+		}
+		if (Input.GetKeyUp (KeyCode.Backspace)) {
+			state--;
+			switch (state) {
+			case 0:
+				ShowAllTargets ();
+				break;
+			case 1:
+				ShowHorizontal ();
+				break;
+			case 2:
+				ShowVertical ();
+				break;
+			case 3:
+				ShowDiagonalLeft ();
+				break;
+			case 4:
+				ShowDiagonalRight ();
+				break;
+			case 5:
+				ShowLayer2 ();
+				break;
+			case 6:
+				HideAllTargets ();
+				break;
+			}
+		}
+
+		if (Input.GetKeyUp (KeyCode.A)) {
+			// Arrow spawner
+			arrowLauncher.SetActive(!arrowLauncher.activeSelf);
+		}
+		if (arrowLauncher.activeSelf) {
+			if (Input.GetKey (KeyCode.UpArrow)) {
+				arrowLauncher.transform.position =  4 * Time.deltaTime * Vector3.forward + arrowLauncher.transform.position;
+			} else if(Input.GetKey (KeyCode.DownArrow)){
+				arrowLauncher.transform.position =  4 * Time.deltaTime * Vector3.back + arrowLauncher.transform.position;
+			} else if(Input.GetKey(KeyCode.LeftArrow)){
+				arrowLauncher.transform.position =  4 * Time.deltaTime * Vector3.left + arrowLauncher.transform.position;
+			} else if(Input.GetKey(KeyCode.RightArrow)){
+				arrowLauncher.transform.position =  4 * Time.deltaTime * Vector3.right + arrowLauncher.transform.position;
+			}
+			if (Input.GetKey (KeyCode.Q)) {
+				arrowLauncher.transform.position = Time.deltaTime * Vector3.up + arrowLauncher.transform.position;
+			} else if (Input.GetKey (KeyCode.Z)) {
+				arrowLauncher.transform.position = Time.deltaTime * Vector3.down + arrowLauncher.transform.position;
+			}
+		}
+
+
+
 	}
 
 	public void HideAllTargets(){
