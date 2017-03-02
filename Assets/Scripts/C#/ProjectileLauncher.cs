@@ -27,7 +27,7 @@ public class ProjectileLauncher : MonoBehaviour {
 			GameObject arrow = Instantiate(projectile);
 			arrow.transform.position = this.transform.position;
 			arrow.transform.rotation = this.transform.rotation;
-			arrow.GetComponent<Rigidbody> ().AddForce (arrow.transform.rotation * Vector3.forward * (80));
+			arrow.GetComponent<Rigidbody> ().AddForce (arrow.transform.rotation * Vector3.forward * (160));
 			arrow.GetComponent<Rigidbody> ().AddForce (arrow.transform.rotation * Vector3.up * (10));
 
 
