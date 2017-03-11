@@ -16,7 +16,7 @@ public class NaiveAI_Runner : MonoBehaviour {
 		flee = false;
 		nma = GetComponent<NavMeshAgent> ();
 //		player = GameObject.Find ("Camera (eye)");
-		player = GameObject.Find ("Player");
+		player = GameObject.Find ("Head");
 		nodes = GameObject.Find ("Nodes");
 		anim = transform.GetChild (0).GetComponent<Animator> ();
 	}

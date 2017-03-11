@@ -4,8 +4,8 @@ using System.Collections;
 public class RunnerSpawner : MonoBehaviour {
 
 	GameObject runner;
-	float origionalCoolDown = 10;
-	float coolDown = 10;
+	float origionalCoolDown = 5;
+	float coolDown = 5;
 	public GameObject enemies;
 
 	// Use this for initialization
@@ -17,9 +17,16 @@ public class RunnerSpawner : MonoBehaviour {
 	void Update () {
 		// spawn a runner every 10 seconds
 
-//		coolDown -= Time.deltaTime;
+		coolDown -= Time.deltaTime;
 
-//		if(coolDown <= 0){
+		if (coolDown <= 0) {
+			runner = Resources.Load ("Prefab/NPC/Runner") as GameObject;
+			runner = Instantiate (runner);
+			runner.transform.SetParent (enemies.transform);
+			runner.transform.position = this.transform.position;
+			coolDown = origionalCoolDown;
+		}
+
 		if (Input.GetKeyUp (KeyCode.W)) {
 			runner = Resources.Load ("Prefab/NPC/Runner") as GameObject;
 			runner = Instantiate (runner);

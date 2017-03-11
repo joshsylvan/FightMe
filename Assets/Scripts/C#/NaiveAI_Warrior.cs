@@ -18,7 +18,7 @@ public class NaiveAI_Warrior : MonoBehaviour {
 		walkback = false;
 		strafe = false;
 //		player = GameObject.Find ("Camera (eye)");
-		player = GameObject.Find ("Player");
+		player = GameObject.Find ("Head");
 		nodes = GameObject.Find ("NodesCloser");
 		nma = GetComponent<NavMeshAgent> ();
 		anim = GetComponent<Animator> ();
