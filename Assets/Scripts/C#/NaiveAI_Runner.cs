@@ -12,6 +12,14 @@ public class NaiveAI_Runner : MonoBehaviour {
 	public bool stutter;
 	public Animator anim;
 
+
+	int x = 4;
+	int y = 3;
+
+	int multiply(){
+		
+	}
+
 	// Use this for initialization
 	void Start () {
 		flee = false;
@@ -31,6 +39,7 @@ public class NaiveAI_Runner : MonoBehaviour {
 				nma.SetDestination (player.transform.position);
 				if (nma.hasPath && nma.remainingDistance <= nma.stoppingDistance) {
 					//attack
+
 					switch ((int)Random.Range (1, 3)) {
 					case 1:
 						anim.SetTrigger ("Slash");
@@ -42,8 +51,6 @@ public class NaiveAI_Runner : MonoBehaviour {
 						Debug.Log ("Not a valid attack!");
 						break;
 					}
-
-
 					flee = true;
 					int rNodeIndex = Random.Range (0, nodes.transform.childCount);
 					nma.SetDestination (nodes.transform.GetChild (rNodeIndex).transform.position);
