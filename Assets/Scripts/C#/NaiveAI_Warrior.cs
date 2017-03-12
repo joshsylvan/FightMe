@@ -8,6 +8,7 @@ public class NaiveAI_Warrior : MonoBehaviour {
 	GameObject player;
 	GameObject nodes;
 	bool walkback, strafe, attack, setUp;
+	public bool stutter;
 	float strafeTimer;
 	int strafeDirection;
 	int rNodeIndex;
@@ -22,67 +23,68 @@ public class NaiveAI_Warrior : MonoBehaviour {
 		nodes = GameObject.Find ("NodesCloser");
 		nma = GetComponent<NavMeshAgent> ();
 		anim = GetComponent<Animator> ();
+		stutter = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		transform.LookAt (player.transform);
-		transform.rotation = Quaternion.Euler (new Vector3(0, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
-		if (!strafe) {
-			nma.SetDestination (player.transform.position);
-			if (nma.remainingDistance <= nma.stoppingDistance) {
-				strafe = true;
-			}
-		} else {
-			if (!setUp) {
-				strafeTimer = Random.Range (3, 10);
-				strafeDirection = Random.Range (0, 2);
-				setUp = true;
-			}
-			if (strafeTimer >= 0) {
-				strafeTimer -= Time.deltaTime;
-				switch(strafeDirection){
-				case 0:
-					transform.RotateAround (player.transform.position, Vector3.up, 20f * Time.deltaTime);
-					break;
-				case 1:
-					transform.RotateAround (player.transform.position, Vector3.down, 20f * Time.deltaTime);
-					break;
+		transform.rotation = Quaternion.Euler (new Vector3 (0, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
+		if (!stutter) {
+			if (!strafe) {
+				nma.SetDestination (player.transform.position);
+				if (nma.remainingDistance <= nma.stoppingDistance) {
+					strafe = true;
 				}
-				rNodeIndex = ClosestNode();
-
 			} else {
-				if (!attack) {
-					nma.stoppingDistance = 1.5f;
-					nma.SetDestination (player.transform.position);
-					nma.Resume ();
-					if (nma.remainingDistance <= nma.stoppingDistance) {
-						attack = true;
-						rNodeIndex = ClosestNode ();
-						anim.SetTrigger("Slash");
-					}
-				} else {
-					//wait for attack animation to finish
-					walkback = true;
+				if (!setUp) {
+					strafeTimer = Random.Range (3, 10);
+					strafeDirection = Random.Range (0, 2);
+					setUp = true;
 				}
-				if (walkback) {
-					nma.stoppingDistance = 0.3f;
-					nma.speed = 1;
-					nma.SetDestination (  nodes.transform.GetChild(rNodeIndex).transform.position  );
-					if (nma.remainingDistance <= nma.stoppingDistance) {
+				if (strafeTimer >= 0) {
+					strafeTimer -= Time.deltaTime;
+					switch (strafeDirection) {
+					case 0:
+						transform.RotateAround (player.transform.position, Vector3.up, 20f * Time.deltaTime);
+						break;
+					case 1:
+						transform.RotateAround (player.transform.position, Vector3.down, 20f * Time.deltaTime);
+						break;
+					}
+					rNodeIndex = ClosestNode ();
+
+				} else {
+					if (!attack) {
 						nma.stoppingDistance = 1.5f;
-						nma.speed = 2.5f;
-						walkback = false;
-						attack = false;
-						strafeTimer = Random.Range (3, 10);
-						strafeDirection = Random.Range (0, 2);
-						nma.Stop ();
+						nma.SetDestination (player.transform.position);
+						nma.Resume ();
+						if (nma.remainingDistance <= nma.stoppingDistance) {
+							attack = true;
+							rNodeIndex = ClosestNode ();
+							anim.SetTrigger ("Slash");
+						}
+					} else {
+						//wait for attack animation to finish
+						walkback = true;
+					}
+					if (walkback) {
+						nma.stoppingDistance = 0.3f;
+						nma.speed = 1;
+						nma.SetDestination (nodes.transform.GetChild (rNodeIndex).transform.position);
+						if (nma.remainingDistance <= nma.stoppingDistance) {
+							nma.stoppingDistance = 1.5f;
+							nma.speed = 2.5f;
+							walkback = false;
+							attack = false;
+							strafeTimer = Random.Range (3, 10);
+							strafeDirection = Random.Range (0, 2);
+							nma.Stop ();
+						}
 					}
 				}
 			}
 		}
-
-
 	}
 
 	int ClosestNode(){
@@ -98,5 +100,18 @@ public class NaiveAI_Warrior : MonoBehaviour {
 		return currentIndex;
 	}
 
+	public void StartStutter(){
+		stutter = true;
+		nma.Stop ();
+	}
+
+	public void EndStutter(){
+		stutter = false;
+		nma.Resume ();
+	}
+
+	public bool GetStutter(){
+		return stutter;
+	}
 
 }

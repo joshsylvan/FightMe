@@ -20,7 +20,7 @@ public class RunnerSpawner : MonoBehaviour {
 		coolDown -= Time.deltaTime;
 
 		if (coolDown <= 0) {
-			runner = Resources.Load ("Prefab/NPC/Runner") as GameObject;
+			runner = Resources.Load ("Prefab/NPC/Runner2") as GameObject;
 			runner = Instantiate (runner);
 			runner.transform.SetParent (enemies.transform);
 			runner.transform.position = this.transform.position;
@@ -28,7 +28,7 @@ public class RunnerSpawner : MonoBehaviour {
 		}
 
 		if (Input.GetKeyUp (KeyCode.W)) {
-			runner = Resources.Load ("Prefab/NPC/Runner") as GameObject;
+			runner = Resources.Load ("Prefab/NPC/Runner2") as GameObject;
 			runner = Instantiate (runner);
 			runner.transform.SetParent (enemies.transform);
 			runner.transform.position = this.transform.position;

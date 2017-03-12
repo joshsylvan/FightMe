@@ -28,7 +28,7 @@ public class AICombatManager : MonoBehaviour {
 					Destroy (GetComponent<Animator> ());
 					Destroy (GetComponent<NavMeshAgent> ());
 				} else if (GetComponent<NaiveAI_Runner> () != null){
-					Destroy (transform.GetChild (0).gameObject.GetComponent<Animator>());
+					Destroy (transform.gameObject.GetComponent<Animator>());
 					transform.GetChild (0).gameObject.GetComponent<Rigidbody> ().isKinematic = false;
 					transform.GetChild (0).transform.SetParent (null);
 					Destroy (GetComponent<NaiveAI_Runner> ());
