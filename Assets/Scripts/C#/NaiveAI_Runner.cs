@@ -12,14 +12,6 @@ public class NaiveAI_Runner : MonoBehaviour {
 	public bool stutter;
 	public Animator anim;
 
-
-	int x = 4;
-	int y = 3;
-
-	int multiply(){
-		
-	}
-
 	// Use this for initialization
 	void Start () {
 		flee = false;
