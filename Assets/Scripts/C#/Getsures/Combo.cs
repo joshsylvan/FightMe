@@ -4,32 +4,36 @@ using UnityEngine;
 
 public class Combo {
 
-	string name;
-	List<Gesture> combo;
+	int ID;
+	List<int> combo;
 
-	public Combo(string name){
-		this.name = name;
+	public Combo(int ID){
+		this.ID = ID;
+		this.combo = new List<int>();
 	}
 
-	public Combo(string name, List<Gesture> combo){
-		this.name = name;
-		this.combo = combo;
+	public int GetID(){
+		return ID;
 	}
 
-	public string GetName(){
-		return name;
-	}
-
-	public List<Gesture> GetGestures(){
+	public List<int> GetCombo(){
 		return combo;
 	}
 
-	public void SetGestures(List<Gesture> patterns){
+	public void SetCombo(List<int> combo){
 		this.combo = combo;
 	}
 
-	public void SetName(string name){
-		this.name = name;
+	public void SetID(int ID){
+		this.ID = ID;
+	}
+
+	public void AddToCombo(int comboID){
+		this.combo.Add (comboID);
+	}
+
+	public int GetComboLength(){
+		return combo.Count;
 	}
 
 }

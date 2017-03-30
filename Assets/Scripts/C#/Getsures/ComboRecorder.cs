@@ -4,58 +4,128 @@ using UnityEngine;
 
 public class ComboRecorder : MonoBehaviour{
 
-	List<Combo> combos;
-	List<Gesture> curCombo;
+	List<Combo> comboRightHand, comboLeftHand;
+	Combo curComboLeft, curComboRight;
 
-	int minGestureInCombo = 3, comboIndex = 0;
-	float ogGestureGap = 1.5f, gestureGap;
-	bool inCombo = false;
+	int minGestureInCombo = 3;
+	float ogGestureGap = 1.5f, gestureGapLeft, gestureGapRight;
+	bool inComboLeft = false, inComboRight = false;
 
+	int comboLeftID = 0, comboRightId = 0;
 
 	void Start(){
-		combos = new List<Combo> ();
-		curCombo = new List<Gesture> ();
-		gestureGap = ogGestureGap;
+		comboLeftHand = new List<Combo> ();
+		comboRightHand = new List<Combo> ();
+		curComboLeft = new Combo (comboLeftID);
+		curComboRight = new Combo (comboRightId);
+		gestureGapLeft = ogGestureGap;
+		gestureGapRight = ogGestureGap;
 	}
 
 	void Update(){
 
-		if (inCombo) {
-			if (gestureGap <= 0) {
-				inCombo = false;
-				SaveCombo ();
+		if (inComboLeft) {
+			if (gestureGapLeft <= 0) {
+				Debug.Log ("ComboLeft Ended");
+				inComboLeft = false;
+				SaveCombo (0, curComboLeft);
 			}
-			gestureGap -= Time.deltaTime;
+			gestureGapLeft -= Time.deltaTime;
+		}
+
+		if (inComboRight) {
+			if (gestureGapRight <= 0) {
+				Debug.Log ("ComboRight Ended");
+				inComboRight = false;
+				SaveCombo (1, curComboRight);
+			}
+			gestureGapRight -= Time.deltaTime;
+		}
+
+		if (Input.GetKeyUp (KeyCode.C)) {
+			FileOutput f = new FileOutput ();
+			f.ComboOutput (comboLeftHand, "leftHandCombos");
+			f.ComboOutput (comboRightHand, "rightHandCombos");
 		}
 
 
 	}
 
-	public void AddGestureToCurrentCombo(Gesture gesture){
-		curCombo.Add (gesture);
-		inCombo = true;
-		gestureGap = ogGestureGap;
-	}
+	void SaveCombo(int LR, Combo curCombo){
+		if (curCombo.GetComboLength() >= minGestureInCombo) {
 
-	void ResetCurrentCombo(){
-		curCombo = new List<Gesture> ();
-	}
-
-	void SaveCombo(){
-		if (curCombo.Count >= minGestureInCombo) {
-			combos.Add (new Combo ("" + comboIndex++, curCombo));
-			ResetCurrentCombo ();
+			if (LR == 0) {
+				comboLeftHand.Add (curCombo);
+				string c = "";
+				foreach (int i in curCombo.GetCombo()) {
+					c += i + ", ";
+				}
+				Debug.Log (curCombo.GetID () + ":" + c);
+				curComboLeft = new Combo (++comboLeftID);
+			} else if (LR == 1) {
+				comboRightHand.Add (curCombo);
+				string c = "";
+				foreach (int i in curCombo.GetCombo()) {
+					c += i + ", ";
+				}
+				Debug.Log (curCombo.GetID () + ":" + c);
+				curComboRight = new Combo (++comboRightId);
+			}
+		
 		} else {
-			Debug.Log ("Not enough gestures for a combo!");
+			Debug.Log ("Not enough gestures for a combo! DELETE");
+			if (LR == 0) {
+				curComboLeft = new Combo (comboLeftID);
+			} else if (LR == 1) {
+				curComboRight = new Combo (comboRightId);
+			}
 		}
 	}
 
-	public List<Combo> GetCombos(){ 
-		return combos;
+	public void AddGestureToCurrentComboLeft(int ID){
+		curComboLeft.AddToCombo (ID);
+		inComboLeft = true;
+		gestureGapLeft = ogGestureGap;
 	}
 
-	public void SetCombos(List<Combo> combos){
-		this.combos = combos;
+	public void AddGestureToCurrentComboRight(int ID){
+		curComboRight.AddToCombo (ID);
+		inComboRight = true;
+		gestureGapRight = ogGestureGap;
 	}
+
+    public void UpdateComboIDsLeft(Pair[] pairs)
+    {
+        foreach (Pair p in pairs)
+        {
+            for (int i = 0; i < comboLeftHand.Count; i++)
+            {
+                for (int j = 0; j < comboLeftHand[i].GetCombo().Count; j++)
+                {
+                    if (p.GetHead() == comboLeftHand[i].GetCombo()[j])
+                    {
+                        comboLeftHand[i].GetCombo()[j] = p.GetTail();
+                    }
+                }
+            }
+        }
+    }
+
+    public void UpdateComboIDsRight(Pair[] pairs)
+    {
+        foreach (Pair p in pairs)
+        {
+            for (int i = 0; i < comboRightHand.Count; i++)
+            {
+                for (int j = 0; j < comboRightHand[i].GetCombo().Count; j++)
+                {
+                    if (p.GetHead() == comboRightHand[i].GetCombo()[j])
+                    {
+                        comboRightHand[i].GetCombo()[j] = p.GetTail();
+                    }
+                }
+            }
+        }
+    }
 
 }

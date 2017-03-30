@@ -62,7 +62,17 @@ public class NaiveAI_Warrior : MonoBehaviour {
 						if (nma.remainingDistance <= nma.stoppingDistance) {
 							attack = true;
 							rNodeIndex = ClosestNode ();
-							anim.SetTrigger ("Slash");
+							switch ((int)Random.Range (1, 3)) {
+							case 1:
+								anim.SetTrigger ("Slash");
+								break;
+							case 2:
+								anim.SetTrigger ("Stab");
+								break;
+							default:
+								Debug.Log ("Not a valid attack!");
+								break;
+							}
 						}
 					} else {
 						//wait for attack animation to finish

@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GestureClassifier {
 
+	List<Pair> combosToChange;
+
 	public GestureClassifier(){
-		
+		this.combosToChange = new List<Pair>();
 	}
 
 	public List<Gesture> Classify(List<Gesture> unclassifiedGestures, List<Gesture> classifiedGestures, float minRatio, float maxDistance){
@@ -14,14 +17,15 @@ public class GestureClassifier {
 			if (gestures.Count >= 1) {
 				int result = NaiveRecognizer (unclassifiedGestures [i].GetPoints(), gestures, minRatio, maxDistance);
 				if (result == -1) {
-					Debug.Log ("Add new Gesture.");
+					//Debug.Log ("Add new Gesture.");
 					gestures.Add (unclassifiedGestures [i]);
 
 				} else {
-					// normalize array
-					Debug.Log("Adjust Gesture " + unclassifiedGestures[i].GetName() + " and " + classifiedGestures[result].GetName());
+                    // normalize array
+                    //Debug.Log("Adjust Gesture " + unclassifiedGestures[i].GetName() + " and " + classifiedGestures[result].GetName());
+                    combosToChange.Add(new Pair(int.Parse(unclassifiedGestures[i].GetName()), int.Parse(classifiedGestures[result].GetName())));
 					classifiedGestures [result] = NormalizeGesture (unclassifiedGestures[i], classifiedGestures[result]);
-					// Maybe normalize rotations too.
+					// Maybe normalize rotations too
 				}
 			} else {
 //				Debug.Log("EMPTY");
@@ -39,6 +43,7 @@ public class GestureClassifier {
 				(p1.GetPoints()[i].getY() + gesture.GetPoints()[i].getY())/2,
 				(p1.GetPoints()[i].getZ() + gesture.GetPoints()[i].getZ())/2
 			));
+			newGesture.AddRotation (gesture.GetRotations() [i]);
 		}
 		return newGesture;
 	}
@@ -102,8 +107,8 @@ public class GestureClassifier {
 			}
 
 		}
-		Debug.Log ("Best Path = " + shortestDistanceIndex + " Distance: " + shortestDistsance + " thresh " + maxDistance);
-		Debug.Log ("Best Ratio = " + bestRatioIndex + " Ratio: " + bestRatio + " thresh " + minRatio);
+		//Debug.Log ("Best Path = " + shortestDistanceIndex + " Distance: " + shortestDistsance + " thresh " + maxDistance);
+		//Debug.Log ("Best Ratio = " + bestRatioIndex + " Ratio: " + bestRatio + " thresh " + minRatio);
 		ResetGestures (patterns);
 
 		if (shortestDistsance <= maxDistance && bestRatio >= minRatio) {
@@ -133,5 +138,9 @@ public class GestureClassifier {
 		}
 	}
 
+    public List<Pair> GetCombosToChange()
+    {
+        return combosToChange;
+    }
 
 }

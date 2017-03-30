@@ -19,7 +19,7 @@ public class GestureRecorder : MonoBehaviour {
 	List<Gesture> unclassifiedGesturesRight, unclassifiedGesturesLeft;
 	List<Gesture> classifiedGesturesRight, classifiedGesturesLeft;
 
-	ComboRecorder comboRecorder;
+	//ComboRecorder comboRecorder;
 
 	int fileIndex = 0;
 	string name = "Josh";
@@ -45,7 +45,7 @@ public class GestureRecorder : MonoBehaviour {
 		classifiedGesturesLeft = new List<Gesture> ();
 		gestureIDRight = 0;
 		gestureIDLeft = 0;
-		comboRecorder = GetComponent<ComboRecorder> ();
+		//comboRecorder = GetComponent<ComboRecorder> ();
 	}
 	
 	// Update is called once per frame
@@ -93,7 +93,7 @@ public class GestureRecorder : MonoBehaviour {
 				}
 				Gesture tGesture = new Gesture ( "" + gestureIDRight++, gesturePosition, gestureRotation );
 				unclassifiedGesturesRight.Add (tGesture);
-				comboRecorder.AddGestureToCurrentCombo (tGesture);
+				//comboRecorder.AddGestureToCurrentCombo (tGesture);
 			}
 		}
 		if (Input.GetKeyUp (KeyCode.Return)) {
@@ -101,6 +101,7 @@ public class GestureRecorder : MonoBehaviour {
 			Debug.Log ("CLASSIFY");
 			GestureClassifier classifier = new GestureClassifier();
 			classifiedGesturesRight = classifier.Classify (unclassifiedGesturesRight, classifiedGesturesRight, 0.5f, 200);
+			
 			f.GestureOutput (classifiedGesturesRight, "test");
 		}
 		if (Input.GetKeyUp (KeyCode.O)) {

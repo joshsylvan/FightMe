@@ -73,4 +73,18 @@ public class Gesture  {
 		}
 	}
 
+	public void AddRotation(Quaternion q){
+
+		if (rotations == null) {
+			rotations = new Quaternion[]{ q };
+		} else {
+			Quaternion[] newRotations = new Quaternion[rotations.Length + 1];
+			for (int i = 0; i < rotations.Length; i++) {
+				newRotations [i] = rotations [i];
+			}
+			newRotations [newRotations.Length - 1] = q;
+			rotations = newRotations;
+		}
+	}
+
 }
