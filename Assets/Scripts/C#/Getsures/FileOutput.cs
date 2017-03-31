@@ -15,8 +15,8 @@ public class FileOutput {
 		foreach (Gesture g in gestures) {
 			contents.Add (g.GetName ());
 			for (int i = 0; i < g.GetPoints ().Length; i++) {
-				contents.Add (g.GetPoints ()[i].getX () + "," + g.GetPoints ()[i].getY () + "," + g.GetPoints ()[i].getZ () 
-					+ g.GetRotations()[i].w + "," + g.GetRotations()[i].x + "," + g.GetRotations()[i].y + "," + g.GetRotations()[i].z
+				contents.Add (g.GetPoints ()[i].getX () + "," + g.GetPoints ()[i].getY () + "," + g.GetPoints ()[i].getZ () + "," +
+					g.GetRotations()[i].x + "," + g.GetRotations()[i].y + "," + g.GetRotations()[i].z + "," + g.GetRotations()[i].w
 				);
 			}
 			contents.Add ("");
