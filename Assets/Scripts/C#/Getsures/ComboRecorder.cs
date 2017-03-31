@@ -94,38 +94,38 @@ public class ComboRecorder : MonoBehaviour{
 		gestureGapRight = ogGestureGap;
 	}
 
-    public void UpdateComboIDsLeft(Pair[] pairs)
-    {
-        foreach (Pair p in pairs)
-        {
-            for (int i = 0; i < comboLeftHand.Count; i++)
-            {
-                for (int j = 0; j < comboLeftHand[i].GetCombo().Count; j++)
-                {
-                    if (p.GetHead() == comboLeftHand[i].GetCombo()[j])
-                    {
-                        comboLeftHand[i].GetCombo()[j] = p.GetTail();
-                    }
-                }
-            }
-        }
-    }
+	public void UpdateComboIDsLeft(Pair[] pairs)
+	{
+		foreach (Pair p in pairs)
+		{
+			for (int i = 0; i < comboLeftHand.Count; i++)
+			{
+				for (int j = 0; j < comboLeftHand[i].GetCombo().Count; j++)
+				{
+					if (p.GetHead() == comboLeftHand[i].GetCombo()[j])
+					{
+						comboLeftHand[i].GetCombo()[j] = p.GetTail();
+					}
+				}
+			}
+		}
+	}
 
-    public void UpdateComboIDsRight(Pair[] pairs)
-    {
-        foreach (Pair p in pairs)
-        {
-            for (int i = 0; i < comboRightHand.Count; i++)
-            {
-                for (int j = 0; j < comboRightHand[i].GetCombo().Count; j++)
-                {
-                    if (p.GetHead() == comboRightHand[i].GetCombo()[j])
-                    {
-                        comboRightHand[i].GetCombo()[j] = p.GetTail();
-                    }
-                }
-            }
-        }
-    }
+	public void UpdateComboIDsRight(Pair[] pairs)
+	{
+		foreach (Pair p in pairs)
+		{
+			for (int i = 0; i < comboRightHand.Count; i++)
+			{
+				for (int j = 0; j < comboRightHand[i].GetCombo().Count; j++)
+				{
+					if (p.GetHead() == comboRightHand[i].GetCombo()[j])
+					{
+						comboRightHand[i].GetCombo()[j] = p.GetTail();
+					}
+				}
+			}
+		}
+	}
 
 }
