@@ -6,22 +6,28 @@ public class GestureLoader : MonoBehaviour {
 
 	int gestureLength = 21;
 
+	List<Gesture> classifiedGestures;
+
 	// Use this for initialization
 	void Start () {
-		FileInput input = new FileInput ();
-		string[] file = input.LoadGestureFile ("rightHandC");
-		foreach (string s in file) {
-			Debug.Log (s);
-		}
 
-		ParseGestureFile (file);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
-		
+
+	public void Init(){
+		FileInput input = new FileInput ();
+		string[] file = input.LoadGestureFile ("RightHandC");
+		//		foreach (string s in file) {
+		//			Debug.Log (s);
+		//		}
+
+		classifiedGestures = ParseGestureFile (file);
+	}
+
 	List<Gesture> ParseGestureFile(string[] file){
 		List<Gesture> gestures = new List<Gesture>();
 		for (int i = 0; i < file.Length/gestureLength; i++) {
@@ -48,5 +54,9 @@ public class GestureLoader : MonoBehaviour {
 		}
 
 		return gestures;
+	}
+
+	public List<Gesture> GetClassifiedGestures(){
+		return classifiedGestures;
 	}
 }
