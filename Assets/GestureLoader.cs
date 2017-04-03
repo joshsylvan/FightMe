@@ -20,7 +20,7 @@ public class GestureLoader : MonoBehaviour {
 
 	public void Init(){
 		FileInput input = new FileInput ();
-		string[] file = input.LoadGestureFile ("RightHandC");
+		string[] file = input.LoadGestureFile ("rightHandU");
 		//		foreach (string s in file) {
 		//			Debug.Log (s);
 		//		}
@@ -40,8 +40,8 @@ public class GestureLoader : MonoBehaviour {
 					g.AddPoint(new Point(
 						float.Parse(temp[0]),
 						float.Parse(temp[1]),
-						float.Parse(temp[2])
-//						float.Parse(temp[7])
+						float.Parse(temp[2]),
+						float.Parse(temp[7])
 					));
 					g.AddRotation(new Quaternion(
 						float.Parse(temp[3]),
