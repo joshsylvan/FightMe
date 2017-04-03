@@ -35,13 +35,19 @@ public class GestureClassifier {
 		return gestures;
 	}
 
-	Gesture NormalizeGesture(Gesture p1, Gesture gesture){
+	Gesture NormalizeGesture(Gesture p1, Gesture gesture){   // TODO Maybe normalize based of the time too.
 		Gesture newGesture = new Gesture(gesture.GetName());
 		for(int i = 0; i < gesture.GetPoints().Length; i++){
+//			newGesture.AddPoint (new Point (
+//				(p1.GetPoints()[i].getX() + gesture.GetPoints()[i].getX())/2,
+//				(p1.GetPoints()[i].getY() + gesture.GetPoints()[i].getY())/2,
+//				(p1.GetPoints()[i].getZ() + gesture.GetPoints()[i].getZ())/2
+//			));
 			newGesture.AddPoint (new Point (
 				(p1.GetPoints()[i].getX() + gesture.GetPoints()[i].getX())/2,
 				(p1.GetPoints()[i].getY() + gesture.GetPoints()[i].getY())/2,
-				(p1.GetPoints()[i].getZ() + gesture.GetPoints()[i].getZ())/2
+				(p1.GetPoints()[i].getZ() + gesture.GetPoints()[i].getZ())/2,
+				gesture.GetPoints()[i].GetDeltaTime()
 			));
 			newGesture.AddRotation (gesture.GetRotations() [i]);
 		}

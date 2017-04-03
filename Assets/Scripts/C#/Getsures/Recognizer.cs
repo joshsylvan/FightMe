@@ -9,19 +9,19 @@ public class Recognizer  {
 	public Recognizer(){
 		patterns = new List<Gesture> ();
 		//Horizontal Stroke
-		patterns.Add ( new Gesture( "Horizontal Right", new Point[]{new Point(0, 0, 0), new Point(20, 0, 0), new Point(40, 0, 0), new Point(60, 0, 0), new Point(80, 0, 0), new Point(100, 0, 0), new Point(120, 0, 0), new Point(140, 0, 0), new Point(160, 0, 0), new Point(180, 0, 0), new Point(200, 0, 0)}));
-		patterns.Add ( new Gesture( "Horizontal Left", new Point[]{new Point(-200, 0, 0), new Point(-180, 0, 0), new Point(-160, 0, 0), new Point(-140, 0, 0), new Point(-120, 0, 0), new Point(-100, 0, 0), new Point(-80, 0, 0), new Point(-60, 0, 0), new Point(-40, 0, 0), new Point(-20, 0, 0), new Point(0, 0, 0)}));
-		//Vertical Stroke
-		patterns.Add ( new Gesture( "Vertical Up", new Point[]{new Point(0, 20, 0), new Point(0, 40, 0), new Point(0, 60, 0), new Point(0, 80, 0), new Point(0, 100, 0), new Point(0, 120, 0), new Point(0, 140, 0), new Point(0, 160, 0), new Point(0, 180, 0), new Point(0, 200, 0)}));
-		patterns.Add ( new Gesture( "Vertical Down", new Point[]{new Point(0, -20, 0), new Point(0, -40, 0), new Point(0, -60, 0), new Point(0, -80, 0), new Point(0, -100, 0), new Point(0, -120, 0), new Point(0, -140, 0), new Point(0, -160, 0), new Point(0, -180, 0), new Point(0, -200, 0)}));
-
-		//Diagonal
-		patterns.Add ( new Gesture( "Right Up", new Point[]{new Point(0, 0, 0), new Point(20, 20, 0), new Point(40, 40, 0), new Point(60, 60, 0), new Point(80, 80, 0), new Point(100, 100, 0), new Point(120, 120, 0), new Point(140, 140, 0), new Point(160, 160, 0), new Point(180, 180, 0)}));
-		patterns.Add ( new Gesture( "Left Up", new Point[]{new Point(0, 0, 0), new Point(-20, 20, 0), new Point(-40, 40, 0), new Point(-60, 60, 0), new Point(-80, 80, 0), new Point(-100, 100, 0), new Point(-120, 120, 0), new Point(-140, 140, 0), new Point(-160, 160, 0), new Point(-180, 180, 0)}));
-
-		//shapes
-		patterns.Add ( new Gesture( "Circle", new Point[]{ new Point(0, 0, 0), new Point(10, 30, 0), new Point(20, 50, 0), new Point(40, 60, 0), new Point(70, 70, 0), new Point(100, 60, 0), new Point(120, 50, 0), new Point(130, 30, 0), new Point(140, 0, 0), new Point(130, -30, 0), new Point(120, -50, 0), new Point(100, -60, 0), new Point(70, -70, 0), new Point(40, -60, 0), new Point(20, -50, 0), new Point(10, -30, 0) } ) );
-		patterns.Add ( new Gesture( "Square", new Point[]{ new Point(0, 0, 0), new Point(0, 40, 0), new Point(0, 60, 0), new Point(0, 80, 0),new Point(20, 80, 0), new Point(40, 80, 0),  new Point(60, 80, 0), new Point(80, 80, 0), new Point(80, 60, 0), new Point(80, 40, 0), new Point(80, 20, 0), new Point(80, 0, 0), new Point(60, 0, 0), new Point(40, 0, 0), new Point(20, 0, 0)  } ) );
+//		patterns.Add ( new Gesture( "Horizontal Right", new Point[]{new Point(0, 0, 0), new Point(20, 0, 0), new Point(40, 0, 0), new Point(60, 0, 0), new Point(80, 0, 0), new Point(100, 0, 0), new Point(120, 0, 0), new Point(140, 0, 0), new Point(160, 0, 0), new Point(180, 0, 0), new Point(200, 0, 0)}));
+//		patterns.Add ( new Gesture( "Horizontal Left", new Point[]{new Point(-200, 0, 0), new Point(-180, 0, 0), new Point(-160, 0, 0), new Point(-140, 0, 0), new Point(-120, 0, 0), new Point(-100, 0, 0), new Point(-80, 0, 0), new Point(-60, 0, 0), new Point(-40, 0, 0), new Point(-20, 0, 0), new Point(0, 0, 0)}));
+//		//Vertical Stroke
+//		patterns.Add ( new Gesture( "Vertical Up", new Point[]{new Point(0, 20, 0), new Point(0, 40, 0), new Point(0, 60, 0), new Point(0, 80, 0), new Point(0, 100, 0), new Point(0, 120, 0), new Point(0, 140, 0), new Point(0, 160, 0), new Point(0, 180, 0), new Point(0, 200, 0)}));
+//		patterns.Add ( new Gesture( "Vertical Down", new Point[]{new Point(0, -20, 0), new Point(0, -40, 0), new Point(0, -60, 0), new Point(0, -80, 0), new Point(0, -100, 0), new Point(0, -120, 0), new Point(0, -140, 0), new Point(0, -160, 0), new Point(0, -180, 0), new Point(0, -200, 0)}));
+//
+//		//Diagonal
+//		patterns.Add ( new Gesture( "Right Up", new Point[]{new Point(0, 0, 0), new Point(20, 20, 0), new Point(40, 40, 0), new Point(60, 60, 0), new Point(80, 80, 0), new Point(100, 100, 0), new Point(120, 120, 0), new Point(140, 140, 0), new Point(160, 160, 0), new Point(180, 180, 0)}));
+//		patterns.Add ( new Gesture( "Left Up", new Point[]{new Point(0, 0, 0), new Point(-20, 20, 0), new Point(-40, 40, 0), new Point(-60, 60, 0), new Point(-80, 80, 0), new Point(-100, 100, 0), new Point(-120, 120, 0), new Point(-140, 140, 0), new Point(-160, 160, 0), new Point(-180, 180, 0)}));
+//
+//		//shapes
+//		patterns.Add ( new Gesture( "Circle", new Point[]{ new Point(0, 0, 0), new Point(10, 30, 0), new Point(20, 50, 0), new Point(40, 60, 0), new Point(70, 70, 0), new Point(100, 60, 0), new Point(120, 50, 0), new Point(130, 30, 0), new Point(140, 0, 0), new Point(130, -30, 0), new Point(120, -50, 0), new Point(100, -60, 0), new Point(70, -70, 0), new Point(40, -60, 0), new Point(20, -50, 0), new Point(10, -30, 0) } ) );
+//		patterns.Add ( new Gesture( "Square", new Point[]{ new Point(0, 0, 0), new Point(0, 40, 0), new Point(0, 60, 0), new Point(0, 80, 0),new Point(20, 80, 0), new Point(40, 80, 0),  new Point(60, 80, 0), new Point(80, 80, 0), new Point(80, 60, 0), new Point(80, 40, 0), new Point(80, 20, 0), new Point(80, 0, 0), new Point(60, 0, 0), new Point(40, 0, 0), new Point(20, 0, 0)  } ) );
 		//		Debug.Log(PointDistance (new Point( -7, 4, 3 ), new Point(17, 6, 2.5f)));
 	}
 

@@ -20,58 +20,58 @@ public class AninTest : MonoBehaviour {
 
 		AnimationCurve curve;
 		Keyframe[] keysX;
-		keysX = new Keyframe[gestures[3].GetPoints().Length];
-		for (int i = 0; i < gestures [3].GetPoints ().Length; i++) {
-			keysX [i] = new Keyframe ((i*0.2f)+0.0f, gestures [3].GetPoints ()[i].getX());
+		keysX = new Keyframe[gestures[0].GetPoints().Length];
+		for (int i = 0; i < gestures [0].GetPoints ().Length; i++) {
+			keysX [i] = new Keyframe ((i*0.2f)+0.0f, gestures [0].GetPoints ()[i].getX());
 		}
 		curve = new AnimationCurve(keysX);
 		clip.SetCurve ("", typeof(Transform), "localPosition.x", curve);
 
 		Keyframe[] keysY;
-		keysY = new Keyframe[gestures[3].GetPoints().Length];
-		for (int i = 0; i < gestures [3].GetPoints ().Length; i++) {
-			keysY [i] = new Keyframe ((i*0.2f)+0.0f, gestures [3].GetPoints ()[i].getY());
+		keysY = new Keyframe[gestures[0].GetPoints().Length];
+		for (int i = 0; i < gestures [0].GetPoints ().Length; i++) {
+			keysY [i] = new Keyframe ((i*0.2f)+0.0f, gestures [0].GetPoints ()[i].getY());
 		}
 		curve = new AnimationCurve(keysY);
 		clip.SetCurve ("", typeof(Transform), "localPosition.y", curve);
 
 		Keyframe[] keysZ;
-		keysZ = new Keyframe[gestures[3].GetPoints().Length];
-		for (int i = 0; i < gestures [3].GetPoints ().Length; i++) {
-			keysZ [i] = new Keyframe ((i*0.2f)+0.0f, gestures [3].GetPoints ()[i].getZ());
+		keysZ = new Keyframe[gestures[0].GetPoints().Length];
+		for (int i = 0; i < gestures [0].GetPoints ().Length; i++) {
+			keysZ [i] = new Keyframe ((i*0.2f)+0.0f, gestures [0].GetPoints ()[i].getZ());
 		}
 		curve = new AnimationCurve(keysZ);
 		clip.SetCurve ("", typeof(Transform), "localPosition.z", curve);
 
 
 		Keyframe[] rKeyX;
-		rKeyX = new Keyframe[gestures [3].GetRotations ().Length];
-		for (int i = 0; i < gestures [3].GetRotations ().Length; i++) {
-			rKeyX [i] = new Keyframe ((i*0.2f)+0.0f, gestures [3].GetRotations ()[i].x);
+		rKeyX = new Keyframe[gestures [0].GetRotations ().Length];
+		for (int i = 0; i < gestures [0].GetRotations ().Length; i++) {
+			rKeyX [i] = new Keyframe ((i*0.2f)+0.0f, gestures [0].GetRotations ()[i].x);
 		}
 		curve = new AnimationCurve(rKeyX);
 		clip.SetCurve ("", typeof(Transform), "localRotation.x", curve);
 
 		Keyframe[] rKeyY;
-		rKeyY = new Keyframe[gestures [3].GetRotations ().Length];
-		for (int i = 0; i < gestures [3].GetRotations ().Length; i++) {
-			rKeyY [i] = new Keyframe ((i*0.2f)+0.0f, gestures [3].GetRotations ()[i].y);
+		rKeyY = new Keyframe[gestures [0].GetRotations ().Length];
+		for (int i = 0; i < gestures [0].GetRotations ().Length; i++) {
+			rKeyY [i] = new Keyframe ((i*0.2f)+0.0f, gestures [0].GetRotations ()[i].y);
 		}
 		curve = new AnimationCurve(rKeyY);
 		clip.SetCurve ("", typeof(Transform), "localRotation.y", curve);
 
 		Keyframe[] rKeyZ;
-		rKeyZ = new Keyframe[gestures [3].GetRotations ().Length];
-		for (int i = 0; i < gestures [3].GetRotations ().Length; i++) {
-			rKeyZ [i] = new Keyframe ((i*0.2f)+0.0f, gestures [3].GetRotations ()[i].z);
+		rKeyZ = new Keyframe[gestures [0].GetRotations ().Length];
+		for (int i = 0; i < gestures [0].GetRotations ().Length; i++) {
+			rKeyZ [i] = new Keyframe ((i*0.2f)+0.0f, gestures [0].GetRotations ()[i].z);
 		}
 		curve = new AnimationCurve(rKeyZ);
 		clip.SetCurve ("", typeof(Transform), "localRotation.z", curve);
 
 		Keyframe[] rKeyW;
-		rKeyW = new Keyframe[gestures [3].GetRotations ().Length];
-		for (int i = 0; i < gestures [3].GetRotations ().Length; i++) {
-			rKeyW [i] = new Keyframe ((i*0.2f)+0.0f, gestures [3].GetRotations ()[i].w);
+		rKeyW = new Keyframe[gestures [0].GetRotations ().Length];
+		for (int i = 0; i < gestures [0].GetRotations ().Length; i++) {
+			rKeyW [i] = new Keyframe ((i*0.2f)+0.0f, gestures [0].GetRotations ()[i].w);
 		}
 		curve = new AnimationCurve(rKeyW);
 		clip.SetCurve ("", typeof(Transform), "localRotation.w", curve);

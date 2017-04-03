@@ -190,37 +190,37 @@ public class GestureRecorder : MonoBehaviour {
 	}
 
 	void AddPoint(SteamVR_TrackedObject obj, GameObject HMD){ // TODO: ROTATE THE POINTS RELATIVE TO THE HEADSET POSITION.
-		if (obj.Equals (rightTrackedObject)) { //right
-
-
-			//rightControllerPoints.Add(new Point(
-			//	obj.transform.position.x - HMD.transform.position.x,
-			//	obj.transform.position.y - HMD.transform.position.y,
-			//	obj.transform.position.z - HMD.transform.position.z
-			//));
-			rightControllerRotations.Add (obj.transform.rotation);
-
-			//MATRIXMETHOD
-
-			Matrix4x4 pointMatrix = HMD.transform.worldToLocalMatrix * obj.transform.localToWorldMatrix;
-			rightControllerPoints.Add(new Point(
-				pointMatrix.GetPosition().x,
-				pointMatrix.GetPosition().y,
-				pointMatrix.GetPosition().z
-			));
-
-
-
-
-
-		} else { //left
-			leftControllerPoints.Add(new Point(
-				obj.transform.position.x - HMD.transform.position.x,
-				obj.transform.position.y - HMD.transform.position.y,
-				obj.transform.position.z - HMD.transform.position.z
-			));
-			leftControllerRotations.Add (obj.transform.rotation);
-		}
+//		if (obj.Equals (rightTrackedObject)) { //right
+//
+//
+//			//rightControllerPoints.Add(new Point(
+//			//	obj.transform.position.x - HMD.transform.position.x,
+//			//	obj.transform.position.y - HMD.transform.position.y,
+//			//	obj.transform.position.z - HMD.transform.position.z
+//			//));
+//			rightControllerRotations.Add (obj.transform.rotation);
+//
+//			//MATRIXMETHOD
+//
+//			Matrix4x4 pointMatrix = HMD.transform.worldToLocalMatrix * obj.transform.localToWorldMatrix;
+//			rightControllerPoints.Add(new Point(
+//				pointMatrix.GetPosition().x,
+//				pointMatrix.GetPosition().y,
+//				pointMatrix.GetPosition().z
+//			));
+//
+//
+//
+//
+//
+//		} else { //left
+//			leftControllerPoints.Add(new Point(
+//				obj.transform.position.x - HMD.transform.position.x,
+//				obj.transform.position.y - HMD.transform.position.y,
+//				obj.transform.position.z - HMD.transform.position.z
+//			));
+//			leftControllerRotations.Add (obj.transform.rotation);
+//		}
 	}
 
 	public List<Gesture> GetUnclassifiedGesturesRight(){

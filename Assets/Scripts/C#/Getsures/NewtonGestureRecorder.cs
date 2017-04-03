@@ -15,6 +15,9 @@ public class NewtonGestureRecorder : MonoBehaviour {
 	List<Point> rightControllerPoints, leftControllerPoints;
 	List<Quaternion> rightControllerRotations, leftControllerRotations;
 
+	// Timers
+	float leftHandDeltaTime = 0, rightHandDeltaTime = 0;
+
 	// Data recordings
 	int gestureIDRight, gestureIDLeft;
 	List<Gesture> unclassifiedGesturesRight, unclassifiedGesturesLeft;
@@ -80,13 +83,16 @@ public class NewtonGestureRecorder : MonoBehaviour {
 			//Debug.Log ("Recording");
 			if (hand.Equals(leftHand)) {
 				AddPoint (leftHand, head);
+				leftHandDeltaTime += Time.deltaTime;
 			} else if (hand.Equals(rightHand)) {
 				AddPoint (rightHand, head);
+				rightHandDeltaTime += Time.deltaTime;
 			}
 		}
 
 		if (hand.Inputs [NVRButtons.Grip].PressUp) {
 			if(hand.Equals(leftHand)) {
+				leftHandDeltaTime = 0;
 				Point[] gesturePosition = NormalizeListPosition (leftControllerPoints, 20);
 				Quaternion[] gestureRotation = NormalizeListRotation (leftControllerRotations, 20);
 				leftControllerPoints = new List<Point> ();
@@ -97,6 +103,7 @@ public class NewtonGestureRecorder : MonoBehaviour {
 					comboRecorder.AddGestureToCurrentComboLeft (int.Parse( tGesture.GetName ()));
 				}
 			} else if (hand.Equals(rightHand)){
+				rightHandDeltaTime = 0;
 				Point[] gesturePosition = NormalizeListPosition (rightControllerPoints, 20);
 				Quaternion[] gestureRotation = NormalizeListRotation (rightControllerRotations, 20);
 				rightControllerPoints = new List<Point> ();
@@ -117,7 +124,8 @@ public class NewtonGestureRecorder : MonoBehaviour {
 			leftControllerPoints.Add(new Point(
 				pointMatrix.GetPosition().x,
 				pointMatrix.GetPosition().y,
-				pointMatrix.GetPosition().z
+				pointMatrix.GetPosition().z,
+				leftHandDeltaTime
 			));
 		} else if (hand.Equals(rightHand)){
 			rightControllerRotations.Add (hand.gameObject.transform.rotation);
@@ -125,7 +133,8 @@ public class NewtonGestureRecorder : MonoBehaviour {
 			rightControllerPoints.Add(new Point(
 				pointMatrix.GetPosition().x,
 				pointMatrix.GetPosition().y,
-				pointMatrix.GetPosition().z
+				pointMatrix.GetPosition().z,
+				rightHandDeltaTime
 			));
 		}
 	}

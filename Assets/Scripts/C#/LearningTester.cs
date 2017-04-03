@@ -85,49 +85,49 @@ public class LearningTester : MonoBehaviour {
 //			new Point(9, 0, 0), 
 //			new Point(10, 0, 0)
 //		}));
-		patterns.Add(new Gesture( "2", new Point[]{
-			new Point(0, 0f, 0), 
-			new Point(1, 1, 0), 
-			new Point(2, 2f, 0), 
-			new Point(3, 3, 0), 
-			new Point(4, 4f, 0), 
-			new Point(5, 5, 0), 
-			new Point(6, 6f, 0), 
-			new Point(7, 7, 0), 
-			new Point(8, 8f, 0), 
-			new Point(9, 9, 0), 
-			new Point(10, 10f, 0)
-		}));
-		patterns.Add(new Gesture( "3", new Point[]{
-			new Point(0, 1f, 0), 
-			new Point(1, 2, 0), 
-			new Point(2, 3f, 0), 
-			new Point(3, 2, 0), 
-			new Point(4, 1f, 0), 
-			new Point(5, 2, 0), 
-			new Point(6, 3f, 0), 
-			new Point(7, 2, 0), 
-			new Point(8, 1f, 0), 
-			new Point(9, 2, 0), 
-			new Point(10, 3f, 0)
-		}));
+//		patterns.Add(new Gesture( "2", new Point[]{
+//			new Point(0, 0f, 0), 
+//			new Point(1, 1, 0), 
+//			new Point(2, 2f, 0), 
+//			new Point(3, 3, 0), 
+//			new Point(4, 4f, 0), 
+//			new Point(5, 5, 0), 
+//			new Point(6, 6f, 0), 
+//			new Point(7, 7, 0), 
+//			new Point(8, 8f, 0), 
+//			new Point(9, 9, 0), 
+//			new Point(10, 10f, 0)
+//		}));
+//		patterns.Add(new Gesture( "3", new Point[]{
+//			new Point(0, 1f, 0), 
+//			new Point(1, 2, 0), 
+//			new Point(2, 3f, 0), 
+//			new Point(3, 2, 0), 
+//			new Point(4, 1f, 0), 
+//			new Point(5, 2, 0), 
+//			new Point(6, 3f, 0), 
+//			new Point(7, 2, 0), 
+//			new Point(8, 1f, 0), 
+//			new Point(9, 2, 0), 
+//			new Point(10, 3f, 0)
+//		}));
 				
 		gc = new GestureClassifier ();
 		List<Gesture> test = new List<Gesture> ();
 
-		test.Add(new Gesture( "1", new Point[]{
-			new Point(0, 2, 0), 
-			new Point(1, 3, 0), 
-			new Point(2, 4, 0), 
-			new Point(3, 5, 0), 
-			new Point(4, 6, 0), 
-			new Point(5, 7, 0), 
-			new Point(6, 8, 0), 
-			new Point(7, 9, 0), 
-			new Point(8, 10, 0), 
-			new Point(9, 11, 0), 
-			new Point(10, 12, 0)
-		}));
+//		test.Add(new Gesture( "1", new Point[]{
+//			new Point(0, 2, 0, 0), 
+//			new Point(1, 3, 0, 0), 
+//			new Point(2, 4, 0), 
+//			new Point(3, 5, 0), 
+//			new Point(4, 6, 0), 
+//			new Point(5, 7, 0), 
+//			new Point(6, 8, 0), 
+//			new Point(7, 9, 0), 
+//			new Point(8, 10, 0), 
+//			new Point(9, 11, 0), 
+//			new Point(10, 12, 0)
+//		}));
 
 //		test.Add(new Gesture( "2", new Point[]{
 //			new Point(0, 0.5f, 0), 

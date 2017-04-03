@@ -41,6 +41,7 @@ public class GestureLoader : MonoBehaviour {
 						float.Parse(temp[0]),
 						float.Parse(temp[1]),
 						float.Parse(temp[2])
+//						float.Parse(temp[7])
 					));
 					g.AddRotation(new Quaternion(
 						float.Parse(temp[3]),
