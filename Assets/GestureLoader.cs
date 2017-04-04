@@ -20,7 +20,7 @@ public class GestureLoader : MonoBehaviour {
 
 	public void Init(){
 		FileInput input = new FileInput ();
-		string[] file = input.LoadGestureFile ("rightHandU");
+		string[] file = input.LoadGestureFile ("RightHandc");
 		//		foreach (string s in file) {
 		//			Debug.Log (s);
 		//		}
