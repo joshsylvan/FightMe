@@ -49,6 +49,10 @@ public class Gesture  {
 		this.name = name;
 	}
 
+	public void SetPoints(Point[] points){
+		this.points = points;
+	}
+
 	public void SetRotations(Quaternion[] rotations){
 		this.rotations = rotations;
 	}

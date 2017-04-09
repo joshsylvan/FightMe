@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UnityEngine;
 
 public class Point {
 
@@ -42,5 +43,9 @@ public class Point {
 
 	public void setCompared(bool compared){
 		this.compared = compared;
+	}
+
+	public Vector3 GetPositionVector(){
+		return new Vector3 (x, y, z);
 	}
 }
