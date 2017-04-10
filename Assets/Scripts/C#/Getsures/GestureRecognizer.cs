@@ -2,22 +2,47 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GestureRecognizer : MonoBehaviour {
+public class GestureRecognizer {
 
-	List<Gesture> patterns;
+	List<Pair> combosToChange;
 	int numberOfPoints = 20;
 
-	public GestureRecognizer(){
-	}
-
 	public void Recognizer(List<Point> points){
+		combosToChange = new List<Pair>(); 
 //		Point[] newPoints = Resample (points.ToArray(), numberOfPoints);
 	}
 
-	public int NaiveRecognizer(Point[] points, List<Gesture> gestures, float minRatio, float maxPathDistance, float maxPointDistance){
-		if(GestureLength(points)< 0.5f){
-			return -1;
+	public List<Gesture> ClassifyGestures(List<Gesture> unclassifiedGestures, List<Gesture> classifiedGestures, float minRatio, float maxPathDistance, float maxPointDistance){
+		combosToChange = new List<Pair>();
+		List<Gesture> gestures = classifiedGestures;
+//		Debug.Log (gestures.Count + "  :  " + unclassifiedGestures.Count);
+//		List<Gesture> sampledUnclassifiedGesture = Resample (unclassifiedGestures, numberOfPoints);
+
+		for (int i = 0; i < unclassifiedGestures.Count; i++) {
+			Gesture currentGesture = unclassifiedGestures [i];
+			List<Point> lp = new List<Point>(currentGesture.GetPoints ());
+			currentGesture.SetPoints ( Resample(lp, 20) );
+			if (GestureLength (currentGesture.GetPoints()) < 0.5f) {
+				continue;
+			}
+			if (gestures.Count >= 1) { // if theeres more than one class then do cla ification
+				int result = NaiveRecognizer(currentGesture.GetPoints(), gestures, minRatio, maxPathDistance, maxPointDistance );
+				if (result == -1) {
+					gestures.Add (currentGesture);
+				} else {
+//					combosToChange.Add (new Pair (int.Parse (currentGesture.GetName ()), int.Parse (classifiedGestures [result].GetName ())));
+					gestures [result] = NormalizeGesture (currentGesture, gestures [result]);
+				}
+			} else { // if there are none createa new class
+				gestures.Add(currentGesture);
+			}
 		}
+
+		return gestures;
+	}
+
+	public int NaiveRecognizer(Point[] points, List<Gesture> gestures, float minRatio, float maxPathDistance, float maxPointDistance){
+		Debug.Log (gestures.Count);
 		int bestRatioIndex = -1;
 		float bestRatio = 0f;
 
@@ -49,7 +74,8 @@ public class GestureRecognizer : MonoBehaviour {
 
 //		Debug.Log ("Best Ratio index, " + bestRatioIndex + " : " + bestRatio); 
 //		Debug.Log ("Best Distance index, " + bestDistanceIndex + " : " + bestDistance);
-
+//		Debug.Log ("END");
+//
 		if (bestRatioIndex == bestDistanceIndex) {
 			if (bestRatio >= minRatio && bestDistance <= maxPathDistance) {
 				return bestRatioIndex;

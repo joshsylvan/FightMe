@@ -28,7 +28,7 @@ public class GestureClassifier {
 					// Maybe normalize rotations too
 				}
 			} else {
-//				Debug.Log("EMPTY"); §
+//				Debug.Log("EMPTY");
 				gestures.Add (unclassifiedGestures [i]);
 			}
 		}
