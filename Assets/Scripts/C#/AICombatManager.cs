@@ -7,7 +7,7 @@ public class AICombatManager : MonoBehaviour {
 
 	public int health = 3;
 	bool enableRagdoll = false;
-	bool dropWeapons = false;
+	public bool dropWeapons = false;
 
 	// Use this for initialization
 	void Start () {
@@ -19,6 +19,7 @@ public class AICombatManager : MonoBehaviour {
 		if (health <= 0) {
 			//weapons
 			if (dropWeapons) {
+				transform.SetParent (GameObject.Find("DeadAI").transform);
 				if (GetComponent<NaiveAI_Warrior> () != null) {
 					transform.GetChild (0).gameObject.GetComponent<Rigidbody> ().isKinematic = false;
 					transform.GetChild (0).transform.SetParent (null);

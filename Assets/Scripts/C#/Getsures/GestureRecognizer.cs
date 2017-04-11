@@ -21,7 +21,9 @@ public class GestureRecognizer {
 		for (int i = 0; i < unclassifiedGestures.Count; i++) {
 			Gesture currentGesture = unclassifiedGestures [i];
 			List<Point> lp = new List<Point>(currentGesture.GetPoints ());
+			List<Quaternion> lr = new List<Quaternion>(currentGesture.GetRotations());
 			currentGesture.SetPoints ( Resample(lp, 20) );
+			currentGesture.SetRotations (NormalizeListRotation(lr, 20));
 			if (GestureLength (currentGesture.GetPoints()) < 0.5f) {
 				continue;
 			}
@@ -100,13 +102,14 @@ public class GestureRecognizer {
 		float D = 0f;
 		List<Point> newPoints = new List<Point>();
 		newPoints.Add(points [0]);
+		float duration = points [points.Count - 1].GetDeltaTime()/n;
 		for (int i = 1; i < points.Count; i++) {
 			float d = Vector3.Distance (points [i - 1].GetPositionVector(), points [i].GetPositionVector());
 			if ((D + d) >= I) {
 				float qx = points [i - 1].getX () + ((I - D) / d) * (points [i].getX () - points [i - 1].getX ());
 				float qy = points [i - 1].getY () + ((I - D) / d) * (points [i].getY () - points [i - 1].getY ());
 				float qz = points [i - 1].getZ () + ((I - D) / d) * (points [i].getZ () - points [i - 1].getZ ());
-				Point q = new Point (qx, qy, qz, 0.25f);
+				Point q = new Point (qx, qy, qz, duration*i);
 				newPoints.Add( q );
 				points.Insert (i, q);
 				D = 0f;
@@ -143,10 +146,34 @@ public class GestureRecognizer {
 				(p1.GetPoints()[i].getX() + gesture.GetPoints()[i].getX())/2,
 				(p1.GetPoints()[i].getY() + gesture.GetPoints()[i].getY())/2,
 				(p1.GetPoints()[i].getZ() + gesture.GetPoints()[i].getZ())/2,
-				gesture.GetPoints()[i].GetDeltaTime()
+				(p1.GetPoints()[i].GetDeltaTime() + gesture.GetPoints()[i].GetDeltaTime())/2
 			));
 			newGesture.AddRotation (gesture.GetRotations() [i]);
 		}
 		return newGesture;
+	}
+
+	Quaternion[] NormalizeListRotation(List<Quaternion> l, int length){
+		if (l.Count < length) {
+			return null;
+		} else {
+			int toRemove = l.Count - length;
+			if (toRemove == 0) {
+				return l.ToArray();
+			} else {
+				float ratio =  ((float)l.Count / (float)toRemove);
+				List<Quaternion> newList = new List<Quaternion> ();
+				for (int i = 0; i < l.Count; i++) {
+					if ((i + 1) % ratio >= 1) {
+						newList.Add (l [i]);
+					}
+				}
+				if (newList.Count > length) {
+					newList.RemoveAt (10);
+				}
+				return newList.ToArray();
+			}
+
+		}
 	}
 }
