@@ -24,6 +24,7 @@ public class TrainedAISword : MonoBehaviour {
 				if (playIndex >= index) {
 					playIndex = 0;
 				}
+				Debug.Log (playIndex);
 				anim.Play ("" + playIndex++);
 			}
 		}

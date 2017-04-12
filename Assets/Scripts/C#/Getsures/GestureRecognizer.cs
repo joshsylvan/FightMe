@@ -134,7 +134,6 @@ public class GestureRecognizer {
 		for (int i = 0; i < p1.Length; i++) {
 			distance += Vector3.Distance (p1 [i], p2 [i]);
 		}
-		Debug.Log (distance / p1.Length);
 		return distance / p1.Length;
 	}
 

@@ -23,15 +23,15 @@ public class ClassifierTesting : MonoBehaviour {
 
 		gr = new GestureRecognizer ();
 
-		//List<Gesture> classifiedG = gr.ClassifyGestures (gestures, new List<Gesture> (), 0.8f, 0.3f, 0.3f);
+		List<Gesture> classifiedG = gr.ClassifyGestures (gestures, new List<Gesture> (), 0.8f, 0.3f, 0.3f);
 
 		//for (int i = 0; i < classifiedG.Count; i++) {
 		//	DrawGestureM (classifiedG[i], ""+i);
 		//}
 
 		//Debug.Log ("Length: " + classifiedG.Count);
-
-		sword.CreateAnimationClipsFromGestures (gestures);
+		Debug.Log ("CLength: " + classifiedG.Count);
+		sword.CreateAnimationClipsFromGestures (classifiedG);
 		sword.CylcleAnimations ();
 		//draw og gesture
 //		DrawGesture(gestures, 5);
