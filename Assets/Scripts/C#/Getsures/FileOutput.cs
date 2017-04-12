@@ -26,6 +26,26 @@ public class FileOutput {
 
 	}
 
+	public void GestureMOutput(List<GestureM> gestures, string name){
+		List<string> contents = new List<string> ();
+		foreach (GestureM g in gestures) {
+			contents.Add (g.GetName ());
+			for (int i = 0; i < g.GetMatrixArray ().Length; i++) {
+				string line = "";
+				for (int j = 0; j < 4; j++) {
+					line += g.GetMatrixArray()[i].GetColumn(j).x + "," +
+						g.GetMatrixArray()[i].GetColumn(j).y + "," +
+						g.GetMatrixArray()[i].GetColumn(j).z + ",";
+				}
+				line += g.GetDeltaTimes () [i];
+				contents.Add (line);
+			}
+			contents.Add ("");
+		}
+		System.IO.File.WriteAllLines (path + "/" + name + ".csv", contents.ToArray());
+
+	}
+
 	public void ComboOutput(List<Combo> combos, string name){
 		List<string> contents = new List<string> ();
 		foreach (Combo c in combos) {

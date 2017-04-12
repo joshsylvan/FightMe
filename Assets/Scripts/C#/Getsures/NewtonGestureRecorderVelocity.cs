@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NewtonVR;
 
-public class NewtonGestureRecorder : MonoBehaviour {
+public class NewtonGestureRecorderVelocity : MonoBehaviour {
 
 	// VR Hands
 	NVRHand leftHand, rightHand;
@@ -78,21 +78,18 @@ public class NewtonGestureRecorder : MonoBehaviour {
 	}
 
 	void UpdateController(NVRHand hand){
-		Debug.Log(hand.transform.localToWorldMatrix.ToString());
-		Debug.Log (hand.transform.localToWorldMatrix.GetColumn(1).x);
-		if (hand.Inputs [NVRButtons.Grip].IsPressed) {
+		float velocity = (Mathf.Abs(hand.GetVelocityEstimation().x) + Mathf.Abs(hand.GetVelocityEstimation().y) + Mathf.Abs(hand.GetVelocityEstimation().z))/3;
+		Debug.Log (velocity);
+		if (velocity > 0.3f) {
 			hand.TriggerHapticPulse (500, NVRButtons.Touchpad);
-			//Debug.Log ("Recording");
-			if (hand.Equals(leftHand)) {
+			if (hand.Equals (leftHand)) {
 				AddPoint (leftHand, head);
 				leftHandDeltaTime += Time.deltaTime;
-			} else if (hand.Equals(rightHand)) {
+			} else if (hand.Equals (rightHand)) {
 				AddPoint (rightHand, head);
 				rightHandDeltaTime += Time.deltaTime;
 			}
-		}
-
-		if (hand.Inputs [NVRButtons.Grip].PressUp) {
+		} else {
 			if(hand.Equals(leftHand)) {
 				leftHandDeltaTime = 0;
 				Point[] gesturePosition = NormalizeListPosition (leftControllerPoints, 20);
@@ -117,6 +114,7 @@ public class NewtonGestureRecorder : MonoBehaviour {
 				}
 			}
 		}
+
 	}
 
 	void AddPoint(NVRHand hand, NVRHead head){
