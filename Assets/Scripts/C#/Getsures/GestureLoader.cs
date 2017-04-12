@@ -7,7 +7,6 @@ public class GestureLoader : MonoBehaviour {
 	int gestureLength = 21;
 
 	List<Gesture> classifiedGestures;
-	List<GestureM> classifiedGesturesM;
 
 	// Use this for initialization
 	void Start () {
@@ -21,14 +20,11 @@ public class GestureLoader : MonoBehaviour {
 
 	public void Init(){
 		FileInput input = new FileInput ();
-		string[] file = input.LoadGestureFile ("LeftHandU");
-		//		foreach (string s in file) {
-		//			Debug.Log (s);
-		//		}
-
-		classifiedGesturesM = ParseGestureFileM (file);
+		string[] file = input.LoadGestureFile ("RightHandU");
+		classifiedGestures = ParseGestureFile (file);
 	}
 
+	/*
 	List<Gesture> ParseGestureFile(string[] file){
 		List<Gesture> gestures = new List<Gesture>();
 		for (int i = 0; i < file.Length/gestureLength; i++) {
@@ -57,11 +53,12 @@ public class GestureLoader : MonoBehaviour {
 
 		return gestures;
 	}
+	*/
 
-	List<GestureM> ParseGestureFileM(string[] file){
-		List<GestureM> gestures = new List<GestureM>();
+	List<Gesture> ParseGestureFile(string[] file){
+		List<Gesture> gestures = new List<Gesture>();
 		for (int i = 0; i < file.Length/gestureLength; i++) {
-			GestureM g = new GestureM ("TEMP");
+			Gesture g = new Gesture ("TEMP");
 			for (int j = i * gestureLength; j < gestureLength + (gestureLength * i); j++) {
 				if (j % gestureLength == 0) {
 					g.SetName (file [i * 21]);
@@ -93,6 +90,7 @@ public class GestureLoader : MonoBehaviour {
 						1)
 					);
 					g.AddMatrix (m);
+					g.AddTime (float.Parse (temp [12]));
 				}
 			}
 			gestures.Add (g);
@@ -101,11 +99,7 @@ public class GestureLoader : MonoBehaviour {
 		return gestures;
 	}
 
-	public List<Gesture> GetClassifiedGestures(){
+	public List<Gesture> GetClassifiedGesturesM(){
 		return classifiedGestures;
-	}
-
-	public List<GestureM> GetClassifiedGesturesM(){
-		return classifiedGesturesM;
 	}
 }

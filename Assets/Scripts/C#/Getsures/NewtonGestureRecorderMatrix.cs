@@ -20,8 +20,8 @@ public class NewtonGestureRecorderMatrix : MonoBehaviour {
 
 	// Data recordings
 	int gestureIDRight, gestureIDLeft;
-	List<GestureM> unclassifiedGesturesRight, unclassifiedGesturesLeft;
-	List<GestureM> classifiedGesturesRight, classifiedGesturesLeft;
+	List<Gesture> unclassifiedGesturesRight, unclassifiedGesturesLeft;
+	List<Gesture> classifiedGesturesRight, classifiedGesturesLeft;
 
 	// Combo
 	ComboRecorder comboRecorder;
@@ -47,11 +47,11 @@ public class NewtonGestureRecorderMatrix : MonoBehaviour {
 		leftHandTimes = new List<float> ();
 
 		// Data Recordings
-		unclassifiedGesturesRight = new List<GestureM> ();
-		unclassifiedGesturesLeft = new List<GestureM> ();
-		classifiedGesturesRight = new List<GestureM> ();
-		classifiedGesturesLeft = new List<GestureM> ();
-		// Getsure ID
+		unclassifiedGesturesRight = new List<Gesture> ();
+		unclassifiedGesturesLeft = new List<Gesture> ();
+		classifiedGesturesRight = new List<Gesture> ();
+		classifiedGesturesLeft = new List<Gesture> ();
+		// Gesture ID
 		gestureIDRight = 0;
 		gestureIDLeft = 0;
 		// Combo
@@ -95,7 +95,7 @@ public class NewtonGestureRecorderMatrix : MonoBehaviour {
 			if(hand.Equals(leftHand)) {
 				leftHandDeltaTime = 0;
 				if (leftHandMatrix.Count >= 20) {
-					GestureM g = new GestureM ("" + gestureIDLeft++, ReduceResolution(leftHandMatrix, 20),  ReduceResolution(leftHandTimes, 20));
+					Gesture g = new Gesture ("" + gestureIDLeft++, ReduceResolution(leftHandMatrix, 20),  ReduceResolution(leftHandTimes, 20));
 					unclassifiedGesturesLeft.Add (g);
 					comboRecorder.AddGestureToCurrentComboLeft (int.Parse( g.GetName ()));
 				}
@@ -115,7 +115,7 @@ public class NewtonGestureRecorderMatrix : MonoBehaviour {
 			} else if (hand.Equals(rightHand)){
 				rightHandDeltaTime = 0;
 				if (rightHandMatrix.Count >= 20) {
-					GestureM g = new GestureM ("" + gestureIDRight++, ReduceResolution(rightHandMatrix, 20), ReduceResolution(rightHandTimes, 20));
+					Gesture g = new Gesture ("" + gestureIDRight++, ReduceResolution(rightHandMatrix, 20), ReduceResolution(rightHandTimes, 20));
 					unclassifiedGesturesRight.Add (g);
 					comboRecorder.AddGestureToCurrentComboRight (int.Parse( g.GetName ()));
 				}
@@ -174,9 +174,9 @@ public class NewtonGestureRecorderMatrix : MonoBehaviour {
 		FileOutput f = new FileOutput ();
 		Debug.Log ("OUTPUT UNCLASSIFY");
 		// Left
-		f.GestureMOutput (unclassifiedGesturesLeft, "leftHandU");
+		f.GestureOutput (unclassifiedGesturesLeft, "leftHandU");
 		// Right
-		f.GestureMOutput (unclassifiedGesturesRight, "rightHandU");
+		f.GestureOutput (unclassifiedGesturesRight, "rightHandU");
 	}
 
 	Matrix4x4[] ReduceResolution(List<Matrix4x4> l, int length){ // RETUNING NULL

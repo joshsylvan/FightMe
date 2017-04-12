@@ -30,6 +30,7 @@ public class TrainedAISword : MonoBehaviour {
 	}
 
 	public void CreateAnimationClipsFromGestures(List<Gesture> gestures){
+		
 		animationClips = new List<AnimationClip> ();
 		this.gestures = gestures;
 		foreach (Gesture g in this.gestures) {
@@ -38,22 +39,22 @@ public class TrainedAISword : MonoBehaviour {
 
 			AnimationCurve curve;
 			// Position Keyframes
-			Keyframe[] keysX = new Keyframe[g.GetPoints ().Length];
-			Keyframe[] keysY = new Keyframe[g.GetPoints ().Length];
-			Keyframe[] keysZ = new Keyframe[g.GetPoints ().Length];
+			Keyframe[] keysX = new Keyframe[g.GetMatrixArray().Length];
+			Keyframe[] keysY = new Keyframe[g.GetMatrixArray().Length];
+			Keyframe[] keysZ = new Keyframe[g.GetMatrixArray().Length];
 			// Rotation Keyframes
-			Keyframe[] keysRX = new Keyframe[g.GetRotations ().Length];
-			Keyframe[] keysRY = new Keyframe[g.GetRotations ().Length];
-			Keyframe[] keysRZ = new Keyframe[g.GetRotations ().Length];
-			Keyframe[] keysRW = new Keyframe[g.GetRotations ().Length];
-			for (int i = 0; i < g.GetPoints ().Length; i++) {
-				keysX [i] = new Keyframe (g.GetPoints () [i].GetDeltaTime (), g.GetPoints () [i].getX ());
-				keysY [i] = new Keyframe (g.GetPoints () [i].GetDeltaTime (), g.GetPoints () [i].getY ());
-				keysZ [i] = new Keyframe (g.GetPoints () [i].GetDeltaTime (), g.GetPoints () [i].getZ ());
-				keysRX [i] = new Keyframe (g.GetPoints ()[i].GetDeltaTime(), g.GetRotations ()[i].x);
-				keysRY [i] = new Keyframe (g.GetPoints ()[i].GetDeltaTime(), g.GetRotations ()[i].y);
-				keysRZ [i] = new Keyframe (g.GetPoints ()[i].GetDeltaTime(), g.GetRotations ()[i].z);
-				keysRW [i] = new Keyframe (g.GetPoints ()[i].GetDeltaTime(), g.GetRotations ()[i].w);
+			Keyframe[] keysRX = new Keyframe[g.GetMatrixArray().Length];
+			Keyframe[] keysRY = new Keyframe[g.GetMatrixArray().Length];
+			Keyframe[] keysRZ = new Keyframe[g.GetMatrixArray().Length];
+			Keyframe[] keysRW = new Keyframe[g.GetMatrixArray().Length];
+			for (int i = 0; i < g.GetMatrixArray().Length; i++) {
+				keysX [i] = new Keyframe (g.GetDeltaTimes()[i], g.GetMatrixArray()[i].GetPosition().x);
+				keysY [i] = new Keyframe (g.GetDeltaTimes()[i], g.GetMatrixArray()[i].GetPosition().y);
+				keysZ [i] = new Keyframe (g.GetDeltaTimes()[i], g.GetMatrixArray()[i].GetPosition().z);
+				keysRX [i] = new Keyframe (g.GetDeltaTimes()[i], g.GetMatrixArray()[i].GetRotation().x);
+				keysRY [i] = new Keyframe (g.GetDeltaTimes()[i], g.GetMatrixArray()[i].GetRotation().y);
+				keysRZ [i] = new Keyframe (g.GetDeltaTimes()[i], g.GetMatrixArray()[i].GetRotation().z);
+				keysRW [i] = new Keyframe (g.GetDeltaTimes()[i], g.GetMatrixArray()[i].GetRotation().w);
 			}
 			curve = new AnimationCurve(keysX);
 			clip.SetCurve ("", typeof(Transform), "localPosition.x", curve);
@@ -72,6 +73,8 @@ public class TrainedAISword : MonoBehaviour {
 			animationClips.Add (clip);
 			anim.AddClip(clip, ""+index++);
 		}
+		/* NEEDS REFACTOR
+		*/ //END
 	}
 
 	public void CylcleAnimations(){

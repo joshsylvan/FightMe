@@ -1,94 +1,100 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class Gesture  {
+public class Gesture {
 
-	Point[] points;
-	Quaternion[] rotations;
-	float duration;
+	Matrix4x4[] transforms;
+	float[] deltaTimes;
 	string name;
-	// POSSIBLE ADDITIONS
-	float distanceFromTarge = 0;
-	bool success = false;
-	int successCount = 0;
-
-	public Gesture(string name, Point[] points){
-		this.name = name;
-		this.points = points;
-	}
-
-	public Gesture(string name, Point[] points, Quaternion[] rotations){
-		this.name = name;
-		this.points = points;
-		this.rotations = rotations;
-	}
 
 	public Gesture(string name){
 		this.name = name;
-		points = null;
-		rotations = null;
+	}
+
+	public Gesture(string name, Matrix4x4[] transforms, float[] deltaTimes){
+		this.name = name;
+		this.transforms = transforms;
+		this.deltaTimes = deltaTimes;
+	}
+
+	public void AddMatrix(Matrix4x4 matrix){
+		if (transforms == null) {
+			transforms = new Matrix4x4[] { matrix };
+		} else {
+			Matrix4x4[] newTransforms = new Matrix4x4[transforms.Length + 1];
+			for(int i = 0; i < transforms.Length; i++){
+				newTransforms [i] = transforms [i];
+			}
+			newTransforms [newTransforms.Length - 1] = matrix;
+			transforms = newTransforms;
+		}
+	}
+
+	public void SetMatrix(int i, Matrix4x4 matrix){
+		transforms [i] = matrix;
+	}
+
+	public void AddTime(float time){
+		if (deltaTimes == null) {
+			deltaTimes = new float[] { time };
+		} else {
+			float[] newTimes = new float[deltaTimes.Length + 1];
+			for(int i = 0; i < deltaTimes.Length; i++){
+				newTimes [i] = deltaTimes [i];
+			}
+			newTimes [newTimes.Length - 1] = time;
+			deltaTimes = newTimes;
+		}
+	}
+
+	public void SetPosition(int i, float x, float y, float z){
+		transforms [i].SetColumn (3, new Vector4 (z, y, z, 1));
+	}
+
+	public float[] GetDeltaTimes(){
+		return deltaTimes;
+	}
+
+	public float GetDuration(){
+		return deltaTimes [deltaTimes.Length - 1];
 	}
 
 	public string GetName(){
 		return name;
 	}
 
-	public Point[] GetPoints(){
-		return points;
-	}
-
-	public float GetDuration(){
-		return duration;
-	}
-
-	public Quaternion[] GetRotations(){
-		return rotations;
-	}
-
 	public void SetName(string name){
 		this.name = name;
 	}
 
-	public void SetPoints(Point[] points){
-		this.points = points;
+	public Matrix4x4[] GetMatrixArray(){
+		return transforms;
 	}
 
-	public void SetRotations(Quaternion[] rotations){
-		this.rotations = rotations;
+	public void SetTimeIndex(int i, float deltaTime){
+		deltaTimes [i] = deltaTime;
 	}
 
-	public void SetDuration(float duration){
-		this.duration = duration;
-	}
-
-
-
-	public void AddPoint(Point p){
-
-		if (points == null) {
-			points = new Point[]{ p };
-		} else {
-			Point[] newPoints = new Point[points.Length + 1];
-			for (int i = 0; i < points.Length; i++) {
-				newPoints [i] = points [i];
-			}
-			newPoints [newPoints.Length - 1] = p;
-			points = newPoints;
+	public void SetPositions(Vector3[] positions){
+		for (int i = 0; i < transforms.Length; i++) {
+			transforms [i].SetColumn (3, new Vector4 (
+				positions[i].x,
+				positions[i].y,
+				positions[i].z,
+				1
+			));
 		}
 	}
 
-	public void AddRotation(Quaternion q){
-
-		if (rotations == null) {
-			rotations = new Quaternion[]{ q };
-		} else {
-			Quaternion[] newRotations = new Quaternion[rotations.Length + 1];
-			for (int i = 0; i < rotations.Length; i++) {
-				newRotations [i] = rotations [i];
-			}
-			newRotations [newRotations.Length - 1] = q;
-			rotations = newRotations;
+	public List<Vector3> GetPositionList(){
+		List<Vector3> positions = new List<Vector3>();
+		foreach (Matrix4x4 m in transforms) {
+			positions.Add (m.GetPosition());
 		}
+		return positions;
 	}
+
+
 
 }

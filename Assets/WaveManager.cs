@@ -8,7 +8,7 @@ public class WaveManager : MonoBehaviour {
 	GameObject runner, warrior;
 	public GameObject[] spawnPoints;
 
-	int waveState = 0;
+	public int waveState = 0;
 
 	int runnersToSpawn = 0;
 	int warriorsToSpawn = 0;

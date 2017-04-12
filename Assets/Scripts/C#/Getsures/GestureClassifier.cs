@@ -11,6 +11,7 @@ public class GestureClassifier {
 		this.combosToChange = new List<Pair>();
 	}
 
+	/*
 	public List<Gesture> Classify(List<Gesture> unclassifiedGestures, List<Gesture> classifiedGestures, float minRatio, float maxDistance){
 		List<Gesture> gestures = classifiedGestures;
 		for (int i = 0; i < unclassifiedGestures.Count; i++) {
@@ -148,5 +149,5 @@ public class GestureClassifier {
     {
         return combosToChange;
     }
-
+*/
 }

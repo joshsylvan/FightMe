@@ -4,31 +4,26 @@ using UnityEngine;
 
 public class GestureRecognizer {
 
-	List<Pair> combosToChange;
+	List<Pair> combosToChange = new List<Pair> ();
 	int numberOfPoints = 20;
 
-	public void Recognizer(List<Point> points){
-		combosToChange = new List<Pair>(); 
-//		Point[] newPoints = Resample (points.ToArray(), numberOfPoints);
-	}
+
+
 
 	public List<Gesture> ClassifyGestures(List<Gesture> unclassifiedGestures, List<Gesture> classifiedGestures, float minRatio, float maxPathDistance, float maxPointDistance){
 		combosToChange = new List<Pair>();
 		List<Gesture> gestures = classifiedGestures;
-//		Debug.Log (gestures.Count + "  :  " + unclassifiedGestures.Count);
-//		List<Gesture> sampledUnclassifiedGesture = Resample (unclassifiedGestures, numberOfPoints);
 
 		for (int i = 0; i < unclassifiedGestures.Count; i++) {
+			
 			Gesture currentGesture = unclassifiedGestures [i];
-			List<Point> lp = new List<Point>(currentGesture.GetPoints ());
-			List<Quaternion> lr = new List<Quaternion>(currentGesture.GetRotations());
-			currentGesture.SetPoints ( Resample(lp, 20) );
-			currentGesture.SetRotations (NormalizeListRotation(lr, 20));
-			if (GestureLength (currentGesture.GetPoints()) < 0.5f) {
+			currentGesture.SetPositions ( Resample(currentGesture.GetPositionList(), 20, currentGesture.GetDuration()) );
+			//currentGesture.SetRotations (NormalizeListRotation(lr, 20));
+			if (GestureLength (currentGesture.GetPositionList().ToArray()) < 0.5f) {
 				continue;
 			}
 			if (gestures.Count >= 1) { // if theeres more than one class then do cla ification
-				int result = NaiveRecognizer(currentGesture.GetPoints(), gestures, minRatio, maxPathDistance, maxPointDistance );
+				int result = NaiveRecognizer(currentGesture.GetPositionList().ToArray(), gestures, minRatio, maxPathDistance, maxPointDistance );
 				if (result == -1) {
 					gestures.Add (currentGesture);
 				} else {
@@ -43,8 +38,45 @@ public class GestureRecognizer {
 		return gestures;
 	}
 
-	public int NaiveRecognizer(Point[] points, List<Gesture> gestures, float minRatio, float maxPathDistance, float maxPointDistance){
-		Debug.Log (gestures.Count);
+	public Vector3[] Resample(List<Vector3> positions, int n, float totalDuration){
+		float I = GestureLength (positions.ToArray ()) / (n - 1);
+		float D = 0f;
+		List<Vector3> newPositions = new List<Vector3>();
+		newPositions.Add(positions [0]);
+		float duration = totalDuration/n;
+		for (int i = 1; i < positions.Count; i++) {
+			float d = Vector3.Distance (positions [i - 1], positions [i]);
+			if ((D + d) >= I) {
+				float qx = positions [i - 1].x + ((I - D) / d) * (positions [i].x - positions [i - 1].x);
+				float qy = positions [i - 1].y + ((I - D) / d) * (positions [i].y - positions [i - 1].y);
+				float qz = positions [i - 1].z + ((I - D) / d) * (positions [i].z - positions [i - 1].z);
+				Vector3 q = new Vector3 (qx, qy, qz);
+				newPositions.Add( q );
+				positions.Insert (i, q);
+				D = 0f;
+			} else {
+				D += d;
+			}
+		}
+		if (newPositions.Count == n - 1) {
+			newPositions.Add(new Vector3( 
+				newPositions[newPositions.Count-1].x,
+				newPositions[newPositions.Count-1].y,
+				newPositions[newPositions.Count-1].z
+			));
+		}
+		return newPositions.ToArray();
+	}
+
+	float GestureLength(Vector3[] positions){
+		float length = 0f;
+		for (int i = 1; i < positions.Length; i++) {
+			length += Vector3.Distance (positions[i], positions[i-1]);
+		}
+		return length;
+	}
+
+	public int NaiveRecognizer(Vector3[] points, List<Gesture> gestures, float minRatio, float maxPathDistance, float maxPointDistance){
 		int bestRatioIndex = -1;
 		float bestRatio = 0f;
 
@@ -53,7 +85,7 @@ public class GestureRecognizer {
 
 		for (int i = 0; i < gestures.Count; i++) {
 			// Distance
-			float pathDistance = GestureDistance(points, gestures[i].GetPoints());
+			float pathDistance = GestureDistance(points, gestures[i].GetPositionList().ToArray());
 			if (pathDistance < bestDistance) {
 				bestDistance = pathDistance;
 				bestDistanceIndex = i;
@@ -62,7 +94,7 @@ public class GestureRecognizer {
 			// Ratio
 			int indexCount = 0;
 			for (int j = 0; j < points.Length; j++) {
-				if (Vector3.Distance (points [j].GetPositionVector (), gestures [i].GetPoints () [j].GetPositionVector ()) <= maxPointDistance) {
+				if (Vector3.Distance (points [j], gestures [i].GetPositionList () [j]) <= maxPointDistance) {
 					indexCount++;
 				}
 			}
@@ -70,14 +102,14 @@ public class GestureRecognizer {
 				bestRatio = indexCount;
 				bestRatioIndex = i;
 			}
-//			Debug.Log (indexCount);
+			//			Debug.Log (indexCount);
 		}
 		bestRatio = bestRatio / points.Length;
 
-//		Debug.Log ("Best Ratio index, " + bestRatioIndex + " : " + bestRatio); 
-//		Debug.Log ("Best Distance index, " + bestDistanceIndex + " : " + bestDistance);
-//		Debug.Log ("END");
-//
+		//		Debug.Log ("Best Ratio index, " + bestRatioIndex + " : " + bestRatio); 
+		//		Debug.Log ("Best Distance index, " + bestDistanceIndex + " : " + bestDistance);
+		//		Debug.Log ("END");
+		//
 		if (bestRatioIndex == bestDistanceIndex) {
 			if (bestRatio >= minRatio && bestDistance <= maxPathDistance) {
 				return bestRatioIndex;
@@ -97,61 +129,30 @@ public class GestureRecognizer {
 		}
 	}
 
-	public Point[] Resample(List<Point> points, int n){
-		float I = GestureLength (points.ToArray ()) / (n - 1);
-		float D = 0f;
-		List<Point> newPoints = new List<Point>();
-		newPoints.Add(points [0]);
-		float duration = points [points.Count - 1].GetDeltaTime()/n;
-		for (int i = 1; i < points.Count; i++) {
-			float d = Vector3.Distance (points [i - 1].GetPositionVector(), points [i].GetPositionVector());
-			if ((D + d) >= I) {
-				float qx = points [i - 1].getX () + ((I - D) / d) * (points [i].getX () - points [i - 1].getX ());
-				float qy = points [i - 1].getY () + ((I - D) / d) * (points [i].getY () - points [i - 1].getY ());
-				float qz = points [i - 1].getZ () + ((I - D) / d) * (points [i].getZ () - points [i - 1].getZ ());
-				Point q = new Point (qx, qy, qz, duration*i);
-				newPoints.Add( q );
-				points.Insert (i, q);
-				D = 0f;
-			} else {
-				D += d;
-			}
-		}
-		if (newPoints.Count == n - 1) {
-			newPoints.Add(new Point (newPoints[newPoints.Count-1].getX (), newPoints [newPoints.Count-1].getY (), newPoints [newPoints.Count-1].getZ (), 0.25f));
-		}
-		return newPoints.ToArray();
-	}
-
-	float GestureDistance(Point[] p1, Point[] p2){
+	float GestureDistance(Vector3[] p1, Vector3[] p2){
 		float distance = 0f;
 		for (int i = 0; i < p1.Length; i++) {
-			distance += Vector3.Distance (p1 [i].GetPositionVector (), p2 [i].GetPositionVector ());
+			distance += Vector3.Distance (p1 [i], p2 [i]);
 		}
+		Debug.Log (distance / p1.Length);
 		return distance / p1.Length;
 	}
 
-	float GestureLength(Point[] points){
-		float length = 0f;
-		for (int i = 1; i < points.Length; i++) {
-			length += Vector3.Distance (points [i].GetPositionVector (), points [i - 1].GetPositionVector ());
+	Gesture NormalizeGesture(Gesture p1, Gesture gesture){   // TODO Maybe normalize based of the time too.
+		for(int i = 0; i < gesture.GetMatrixArray().Length; i++){
+			gesture.GetMatrixArray () [i].SetColumn (3, new Vector4 (
+				(p1.GetMatrixArray()[i].GetPosition().x + gesture.GetMatrixArray()[i].GetPosition().x)/2,
+				(p1.GetMatrixArray()[i].GetPosition().y + gesture.GetMatrixArray()[i].GetPosition().y)/2,
+				(p1.GetMatrixArray()[i].GetPosition().z + gesture.GetMatrixArray()[i].GetPosition().z)/2
+			));
+			gesture.SetTimeIndex (i, (p1.GetDeltaTimes () [i] + gesture.GetDeltaTimes () [i]) / 2);
 		}
-		return length;
+		return gesture;
 	}
 
-	Gesture NormalizeGesture(Gesture p1, Gesture gesture){   // TODO Maybe normalize based of the time too.
-		Gesture newGesture = new Gesture("NEW");
-		for(int i = 0; i < gesture.GetPoints().Length; i++){
-			newGesture.AddPoint (new Point (
-				(p1.GetPoints()[i].getX() + gesture.GetPoints()[i].getX())/2,
-				(p1.GetPoints()[i].getY() + gesture.GetPoints()[i].getY())/2,
-				(p1.GetPoints()[i].getZ() + gesture.GetPoints()[i].getZ())/2,
-				(p1.GetPoints()[i].GetDeltaTime() + gesture.GetPoints()[i].GetDeltaTime())/2
-			));
-			newGesture.AddRotation (gesture.GetRotations() [i]);
-		}
-		return newGesture;
-	}
+	/*  START REFACTOR HERE
+
+
 
 	Quaternion[] NormalizeListRotation(List<Quaternion> l, int length){
 		if (l.Count < length) {
@@ -176,4 +177,6 @@ public class GestureRecognizer {
 
 		}
 	}
+
+ */ //WaitForEndOfFrame REFACTOR
 }

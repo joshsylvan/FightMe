@@ -10,6 +10,7 @@ public class FileOutput {
 		path = Application.dataPath;
 	}
 
+	/*
 	public void GestureOutput(List<Gesture> gestures, string name){
 		List<string> contents = new List<string> ();
 		foreach (Gesture g in gestures) {
@@ -25,10 +26,11 @@ public class FileOutput {
 		System.IO.File.WriteAllLines (path + "/" + name + ".csv", contents.ToArray());
 
 	}
+	*/
 
-	public void GestureMOutput(List<GestureM> gestures, string name){
+	public void GestureOutput(List<Gesture> gestures, string name){
 		List<string> contents = new List<string> ();
-		foreach (GestureM g in gestures) {
+		foreach (Gesture g in gestures) {
 			contents.Add (g.GetName ());
 			for (int i = 0; i < g.GetMatrixArray ().Length; i++) {
 				string line = "";

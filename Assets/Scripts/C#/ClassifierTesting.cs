@@ -9,7 +9,7 @@ public class ClassifierTesting : MonoBehaviour {
 	GestureRecognizer gr;
 	GestureLoader gl;
 
-	List<GestureM> gestures;
+	List<Gesture> gestures;
 
 	public TrainedAISword sword;
 
@@ -23,13 +23,16 @@ public class ClassifierTesting : MonoBehaviour {
 
 		gr = new GestureRecognizer ();
 
-		//List<Gesture> classifiedG = gr.ClassifyGestures (gestures, new List<Gesture> (), 0.5f, 0.05f, 2);
-		for (int i = 0; i < gestures.Count; i++) {
-			DrawGestureM (gestures[i], ""+i);
-		}
-		Debug.Log ("Length: " + gestures.Count);
-		//sword.CreateAnimationClipsFromGestures (classifiedG);
-		//sword.CylcleAnimations ();
+		//List<Gesture> classifiedG = gr.ClassifyGestures (gestures, new List<Gesture> (), 0.8f, 0.3f, 0.3f);
+
+		//for (int i = 0; i < classifiedG.Count; i++) {
+		//	DrawGestureM (classifiedG[i], ""+i);
+		//}
+
+		//Debug.Log ("Length: " + classifiedG.Count);
+
+		sword.CreateAnimationClipsFromGestures (gestures);
+		sword.CylcleAnimations ();
 		//draw og gesture
 //		DrawGesture(gestures, 5);
 
@@ -63,46 +66,8 @@ public class ClassifierTesting : MonoBehaviour {
 	void Update () {
 		
 	}
-
-	public void DrawGesture(List<Gesture> gestures, int i){
-
-		GameObject node = Resources.Load ("SwordNode") as GameObject;
-		GameObject gesture = new GameObject("GGG");
-		float mult = 1;
-
-		for (int j = 0; j < gestures [i].GetPoints ().Length; j++) {
-			GameObject temp = Instantiate (node);
-			temp.transform.rotation = gestures [i].GetRotations () [j];
-			temp.transform.SetParent (gesture.transform);
-			temp.transform.localPosition = new Vector3 (
-				gestures [i].GetPoints ()[j].getX()*mult, 
-				gestures [i].GetPoints ()[j].getY()*mult, 
-				gestures [i].GetPoints ()[j].getZ()*mult
-			);
-
-		}
-
-	}
-
-	public void DrawGesture(Gesture gesture, string name){
-
-		GameObject node = Resources.Load ("SwordNode") as GameObject;
-		GameObject ge = new GameObject(name);
-		float mult = 1;
-		for (int j = 0; j < gesture.GetPoints ().Length; j++) {
-			GameObject temp = Instantiate (node);
-			temp.transform.rotation = gesture.GetRotations () [j];
-			temp.transform.SetParent (ge.transform);
-			temp.transform.localPosition = new Vector3 (
-				gesture.GetPoints ()[j].getX()*mult, 
-				gesture.GetPoints ()[j].getY()*mult, 
-				gesture.GetPoints ()[j].getZ()*mult
-			);
-		}
-
-	}
-
-	public void DrawGestureM(GestureM gesture, string name){
+		
+	public void DrawGestureM(Gesture gesture, string name){
 
 		GameObject node = Resources.Load ("SwordNode") as GameObject;
 		GameObject ge = new GameObject(name);
@@ -116,18 +81,5 @@ public class ClassifierTesting : MonoBehaviour {
 
 	}
 
-	Gesture NormalizeGesture(Gesture p1, Gesture gesture){   // TODO Maybe normalize based of the time too.
-		Gesture newGesture = new Gesture("NEW");
-		for(int i = 0; i < gesture.GetPoints().Length; i++){
-			newGesture.AddPoint (new Point (
-				(p1.GetPoints()[i].getX() + gesture.GetPoints()[i].getX())/2,
-				(p1.GetPoints()[i].getY() + gesture.GetPoints()[i].getY())/2,
-				(p1.GetPoints()[i].getZ() + gesture.GetPoints()[i].getZ())/2,
-				gesture.GetPoints()[i].GetDeltaTime()
-			));
-			newGesture.AddRotation (gesture.GetRotations() [i]);
-		}
-		return newGesture;
-	}
 
 }

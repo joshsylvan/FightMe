@@ -20,8 +20,8 @@ public class NewtonGestureRecorder : MonoBehaviour {
 
 	// Data recordings
 	int gestureIDRight, gestureIDLeft;
-	List<Gesture> unclassifiedGesturesRight, unclassifiedGesturesLeft;
-	List<Gesture> classifiedGesturesRight, classifiedGesturesLeft;
+	List<GestureOld> unclassifiedGesturesRight, unclassifiedGesturesLeft;
+	List<GestureOld> classifiedGesturesRight, classifiedGesturesLeft;
 
 	// Combo
 	ComboRecorder comboRecorder;
@@ -46,10 +46,10 @@ public class NewtonGestureRecorder : MonoBehaviour {
 		rightControllerRotations = new List<Quaternion> ();
 		leftControllerRotations = new List<Quaternion> ();
 		// Data Recordings
-		unclassifiedGesturesRight = new List<Gesture> ();
-		unclassifiedGesturesLeft = new List<Gesture> ();
-		classifiedGesturesRight = new List<Gesture> ();
-		classifiedGesturesLeft = new List<Gesture> ();
+		unclassifiedGesturesRight = new List<GestureOld> ();
+		unclassifiedGesturesLeft = new List<GestureOld> ();
+		classifiedGesturesRight = new List<GestureOld> ();
+		classifiedGesturesLeft = new List<GestureOld> ();
 		// Getsure ID
 		gestureIDRight = 0;
 		gestureIDLeft = 0;
@@ -78,8 +78,6 @@ public class NewtonGestureRecorder : MonoBehaviour {
 	}
 
 	void UpdateController(NVRHand hand){
-		Debug.Log(hand.transform.localToWorldMatrix.ToString());
-		Debug.Log (hand.transform.localToWorldMatrix.GetColumn(1).x);
 		if (hand.Inputs [NVRButtons.Grip].IsPressed) {
 			hand.TriggerHapticPulse (500, NVRButtons.Touchpad);
 			//Debug.Log ("Recording");
@@ -100,7 +98,7 @@ public class NewtonGestureRecorder : MonoBehaviour {
 				leftControllerPoints = new List<Point> ();
 				leftControllerRotations = new List<Quaternion> ();
 				if (gesturePosition != null) {
-					Gesture tGesture = new Gesture ( "" + gestureIDLeft++, gesturePosition, gestureRotation );
+					GestureOld tGesture = new GestureOld ( "" + gestureIDLeft++, gesturePosition, gestureRotation );
 					unclassifiedGesturesLeft.Add (tGesture);
 					comboRecorder.AddGestureToCurrentComboLeft (int.Parse( tGesture.GetName ()));
 				}
@@ -111,7 +109,7 @@ public class NewtonGestureRecorder : MonoBehaviour {
 				rightControllerPoints = new List<Point> ();
 				rightControllerRotations = new List<Quaternion> ();
 				if (gesturePosition != null) {
-					Gesture tGesture = new Gesture ( "" + gestureIDRight++, gesturePosition, gestureRotation );
+					GestureOld tGesture = new GestureOld ( "" + gestureIDRight++, gesturePosition, gestureRotation );
 					unclassifiedGesturesRight.Add (tGesture);
 					comboRecorder.AddGestureToCurrentComboRight (int.Parse( tGesture.GetName ()));
 				}
@@ -195,6 +193,7 @@ public class NewtonGestureRecorder : MonoBehaviour {
 		FileOutput f = new FileOutput ();
 		Debug.Log ("OUTPUT CLASSIFY");
 		// Left
+		/*
 		GestureClassifier classifierL = new GestureClassifier();
 		classifiedGesturesLeft = classifierL.Classify (unclassifiedGesturesLeft, classifiedGesturesLeft, 0.5f, 200);
 		f.GestureOutput (classifiedGesturesLeft, "leftHandC");
@@ -209,15 +208,18 @@ public class NewtonGestureRecorder : MonoBehaviour {
         comboRecorder.UpdateComboIDsRight(combosToChangeR);
         unclassifiedGesturesLeft = new List<Gesture>();
         unclassifiedGesturesRight = new List<Gesture>();
+        */
 	}
 
 	void OutputUnclassifiedGestureCSV(){
 		FileOutput f = new FileOutput ();
 		Debug.Log ("OUTPUT UNCLASSIFY");
+		/*
 		// Left
 		f.GestureOutput (unclassifiedGesturesLeft, "leftHandU");
 		// Right
 		f.GestureOutput (unclassifiedGesturesRight, "rightHandU");
+		*/
 	}
 
 }

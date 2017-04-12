@@ -4,7 +4,7 @@ using UnityEngine;
 using NewtonVR;
 
 public class NewtonGestureRecorderVelocity : MonoBehaviour {
-
+	/* START 
 	// VR Hands
 	NVRHand leftHand, rightHand;
 	NVRHead head;
@@ -217,5 +217,5 @@ public class NewtonGestureRecorderVelocity : MonoBehaviour {
 		// Right
 		f.GestureOutput (unclassifiedGesturesRight, "rightHandU");
 	}
-
+	*/ //END
 }
