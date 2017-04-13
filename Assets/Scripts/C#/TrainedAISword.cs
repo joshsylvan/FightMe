@@ -11,10 +11,14 @@ public class TrainedAISword : MonoBehaviour {
 	int playIndex = 0;
 	bool cycleAnimations = false;
 
-	// Use this for initialization
-	void Start () {
+	void Awake(){
 		anim = GetComponent<Animation> ();
 		animationClips = new List<AnimationClip> ();
+	}
+
+	// Use this for initialization
+	void Start () {
+		
 	}
 	
 	// Update is called once per frame

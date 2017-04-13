@@ -4,13 +4,17 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class TrainedAI : MonoBehaviour {
-
-	NavMeshAgent nma;
+	//
+	GestureLoader gl;
+	List<Gesture> gestures;
+	//
+	public NavMeshAgent nma;
 	GameObject player;
 	GameObject nodes, closeNodes;
 	bool flee;
 	public bool stutter;
 	public Animation sword;
+	public TrainedAISword ai;
 
 	public int behaviour = 0;
 
@@ -18,21 +22,32 @@ public class TrainedAI : MonoBehaviour {
 	bool defend = true;
 	bool strafe = false;
 	bool nearPlayer = false;
-
 	float strafeTimer;
 	int strafeDirection;
-
 	int defensiveSate = 0;
+	// Offensive
+	int offensiveState = 0;
+	bool offensiveStrafe = false;
+	int attacks = 0;
 
-
-	// Use this for initialization
-	void Start () {
-		flee = false;
-		stutter = false;
+	void Awake(){
 		nma = GetComponent<NavMeshAgent> ();
 		player = GameObject.Find ("Head");
 		nodes = GameObject.Find ("Nodes");
 		closeNodes = GameObject.Find ("NodesCloser");
+	}
+
+	// Use this for initialization
+	void Start () {
+		// Gesture Loader
+		gl = GetComponent<GestureLoader>();
+		gestures = gl.GetClassifiedGesturesM ();
+		ai.CreateAnimationClipsFromGestures (gestures);
+//		ai.CylcleAnimations()
+
+		// AI movement
+		flee = false;
+		stutter = false;
 //		nma.SetDestination (nodes.transform.GetChild (Random.Range (0, nodes.transform.childCount)).transform.position);
 	}
 	
@@ -40,8 +55,9 @@ public class TrainedAI : MonoBehaviour {
 	void Update () {
 		transform.LookAt (player.transform);
 		transform.rotation = Quaternion.Euler (new Vector3(0, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
-		DefensiveBehaviour();
-
+//		DefensiveBehaviour();
+		OffensiveBehaviour();
+//		Debug.Log (defensiveSate);
 
 //		switch (behaviour) {
 //		case 0: // Defensive
@@ -61,6 +77,49 @@ public class TrainedAI : MonoBehaviour {
 
 	}
 
+	void OffensiveBehaviour(){
+		switch (offensiveState) {
+		case 0:
+			nma.SetDestination (closeNodes.transform.GetChild (Random.Range (0, closeNodes.transform.childCount)).transform.position);
+			offensiveState = 1;
+			break;
+		case 1:
+			if (!offensiveStrafe) {
+				if (nma.remainingDistance <= nma.stoppingDistance) {
+					nma.Stop ();
+					offensiveStrafe = true;
+					strafeTimer = Random.Range (3, 10);
+				}
+			} else {
+				strafeTimer -= Time.deltaTime;
+				if (strafeTimer > 0) {
+					transform.RotateAround (player.transform.position, Vector3.down, 20f * Time.deltaTime);
+				} else {
+					offensiveState = 2;
+					offensiveStrafe = false;
+					nma.stoppingDistance = 1.5f;
+					nma.SetDestination (player.transform.position);
+					nma.Resume ();
+				}
+			}
+			break;
+		case 2:
+			if (nma.remainingDistance <= nma.stoppingDistance) {
+				attacks = Random.Range (0, 4);
+				offensiveState = 3;
+			}
+			break;
+		case 3:
+			if (!sword.isPlaying && attacks <= 0) {
+				offensiveState = 0;
+			} else if (!sword.isPlaying && attacks >= 1) {
+				attacks--;
+				sword.Play (Random.Range (0, gestures.Count)+"");
+			}
+			break;
+		}
+	}
+
 	void DefensiveBehaviour(){
 //		transform.RotateAround (player.transform.position, Vector3.down, 20f * Time.deltaTime);
 		switch (defensiveSate) {
@@ -68,6 +127,7 @@ public class TrainedAI : MonoBehaviour {
 			if (nma.remainingDistance <= nma.stoppingDistance) {
 				nma.SetDestination (nodes.transform.GetChild (Random.Range (0, nodes.transform.childCount)).transform.position);
 				defensiveSate = 1;
+				nma.stoppingDistance = 0f;
 			}
 			break;
 		case 1:
@@ -86,11 +146,17 @@ public class TrainedAI : MonoBehaviour {
 					if (nearPlayer) {
 						defensiveSate = 3;
 						nearPlayer = false;
+						nma.stoppingDistance = 1.5f;
+						nma.SetDestination (player.transform.position);
+						nma.Resume ();
 					} else {
 						switch (Random.Range (0, 2)) {
 						case 0:
 						//Attack
 							defensiveSate = 3;
+							nma.stoppingDistance = 1.5f;
+							nma.SetDestination (player.transform.position);
+							nma.Resume ();
 							break;
 						case 1:
 							defensiveSate = 2;
@@ -109,9 +175,18 @@ public class TrainedAI : MonoBehaviour {
 			defensiveSate = 1;
 			break;
 		case 3:
-			nma.stoppingDistance = 1.5f;
-			nma.SetDestination (player.transform.position);
-			nma.Resume ();
+			if (nma.remainingDistance <= nma.stoppingDistance) {
+				sword.Play (Random.Range (0, gestures.Count)+"");
+				defensiveSate = 4;
+			}
+			break;
+		case 4:
+			if (!sword.isPlaying) {
+				flee = false;
+				stutter = false;
+				nearPlayer = false;
+				defensiveSate = 0;
+			}
 			break;
 		default:
 			break;
@@ -138,9 +213,5 @@ public class TrainedAI : MonoBehaviour {
 //				}
 //			}
 //		}
-	}
-
-	void OffensiveBehaviour(){
-	
 	}
 }

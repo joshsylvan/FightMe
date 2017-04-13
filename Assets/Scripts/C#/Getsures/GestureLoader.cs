@@ -8,9 +8,13 @@ public class GestureLoader : MonoBehaviour {
 
 	List<Gesture> classifiedGestures;
 
+	void Awake(){
+		Init ();
+	}
+
 	// Use this for initialization
 	void Start () {
-
+		
 	}
 	
 	// Update is called once per frame
