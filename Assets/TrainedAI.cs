@@ -6,7 +6,8 @@ using UnityEngine.AI;
 public class TrainedAI : MonoBehaviour {
 	//
 	GestureLoader gl;
-	List<Gesture> gestures;
+	List<Gesture> Ugestures, gestures;
+	GestureRecognizer gr;
 	//
 	public NavMeshAgent nma;
 	GameObject player;
@@ -41,8 +42,14 @@ public class TrainedAI : MonoBehaviour {
 	void Start () {
 		// Gesture Loader
 		gl = GetComponent<GestureLoader>();
-		gestures = gl.GetClassifiedGesturesM ();
+		Ugestures = gl.GetClassifiedGesturesM ();
+		gr = new GestureRecognizer (); 
+		gestures = gr.ClassifyGestures(Ugestures, new List<Gesture>(), 0.8f, 0.3f, 0.3f);
+
+
+		Debug.Log ("Gestu  " + gestures.Count);
 		ai.CreateAnimationClipsFromGestures (gestures);
+		sword.Play (""+gestures.Count);
 //		ai.CylcleAnimations()
 
 		// AI movement
@@ -111,10 +118,11 @@ public class TrainedAI : MonoBehaviour {
 			break;
 		case 3:
 			if (!sword.isPlaying && attacks <= 0) {
+				sword.Play (""+(gestures.Count));
 				offensiveState = 0;
 			} else if (!sword.isPlaying && attacks >= 1) {
 				attacks--;
-				sword.Play (Random.Range (0, gestures.Count)+"");
+				sword.Play (Random.Range (0, gestures.Count-1)+"");
 			}
 			break;
 		}
@@ -124,6 +132,7 @@ public class TrainedAI : MonoBehaviour {
 //		transform.RotateAround (player.transform.position, Vector3.down, 20f * Time.deltaTime);
 		switch (defensiveSate) {
 		case 0:
+			sword.gameObject.transform.position = Vector3.MoveTowards (sword.gameObject.transform.position, new Vector3 (0, 0, 0), 2f);
 			if (nma.remainingDistance <= nma.stoppingDistance) {
 				nma.SetDestination (nodes.transform.GetChild (Random.Range (0, nodes.transform.childCount)).transform.position);
 				defensiveSate = 1;

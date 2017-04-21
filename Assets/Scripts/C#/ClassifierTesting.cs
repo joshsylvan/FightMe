@@ -23,28 +23,40 @@ public class ClassifierTesting : MonoBehaviour {
 
 		gr = new GestureRecognizer ();
 
-		List<Gesture> classifiedG = gr.ClassifyGestures (gestures, new List<Gesture> (), 0.8f, 0.3f, 0.3f);
+		float ratio = 0.825f, maxPathDistance = 0.3f, maxPointDistance = 10f;
 
-		//for (int i = 0; i < classifiedG.Count; i++) {
-		//	DrawGestureM (classifiedG[i], ""+i);
-		//}
+
+//		List<Gesture> classifiedG = new List<Gesture>(); 
+
+//		for (int i = 1; i <= 10; i++) {
+//			gl.Init ();
+//			gestures = gl.GetClassifiedGesturesM ();
+//			gr = new GestureRecognizer ();
+			List<Gesture> classifiedG = new List<Gesture> ();
+			ratio = 0.8f; maxPathDistance = 0.3f; maxPointDistance = 0.35f;
+			classifiedG = gr.ClassifyGestures (gestures, new List<Gesture> (), ratio, maxPathDistance, maxPointDistance);
+//			Debug.Log ("Ratio : " + ratio + ", MaxPathDistance: " + maxPathDistance + ", MaxPointDistance: " + maxPointDistance + ", Classified Length: " + classifiedG.Count);
+//		}
+
+
+		for (int i = 0; i < classifiedG.Count; i++) {
+			DrawGestureM (classifiedG[i], ""+i);
+		}
 
 		//Debug.Log ("Length: " + classifiedG.Count);
-		Debug.Log ("CLength: " + classifiedG.Count);
-		sword.CreateAnimationClipsFromGestures (classifiedG);
-		sword.CylcleAnimations ();
+//		Debug.Log ("CLength: " + classifiedG.Count);
+//		sword.CreateAnimationClipsFromGestures (classifiedG);
+//		sword.CylcleAnimations ();
 		//draw og gesture
 //		DrawGesture(gestures, 5);
 
-		/*
-		for (int i = 0; i < classifiedG.Count; i++) {
-//			List<Point> tGesture = new List<Point> (gestures[i].GetPoints());
-//			gestures [i].SetPoints ( gr.Resample( tGesture, 20) );
-			Gesture g = classifiedG[i];
-			g.SetPoints(gr.Resample(new List<Point> (g.GetPoints()), 20));
-			DrawGesture(g, ""+i);
-		} 
-		*/
+
+//		for (int i = 0; i < classifiedG.Count; i++) {
+////			List<Point> tGesture = new List<Point> (gestures[i].GetPoints());
+////			gestures [i].SetPoints ( gr.Resample( tGesture, 20) );
+//			DrawGestureM(classifiedG[i], i+"");
+//		} 
+
 
 //		trainingGesture = gestures[testIndex];
 //		gestures.RemoveAt (testIndex);
@@ -69,8 +81,17 @@ public class ClassifierTesting : MonoBehaviour {
 		
 	public void DrawGestureM(Gesture gesture, string name){
 
-		GameObject node = Resources.Load ("SwordNode") as GameObject;
+		GameObject node = Resources.Load ("GNode") as GameObject;
 		GameObject ge = new GameObject(name);
+
+		Color col = new Color (Random.Range (0, 256), Random.Range (0, 256), Random.Range (0, 256), 1);
+		MeshRenderer mr = node.GetComponent<MeshRenderer> ();
+		Material mat = new Material (Shader.Find ("Standard"));
+		mat.color = col;
+		mr.material = mat;
+
+//		600 x 480
+
 		float mult = 1;
 		for (int j = 0; j < gesture.GetMatrixArray().Length; j++) {
 			GameObject temp = Instantiate (node);

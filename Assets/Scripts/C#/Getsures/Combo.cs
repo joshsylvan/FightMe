@@ -12,6 +12,12 @@ public class Combo {
 		this.combo = new List<int>();
 	}
 
+	public Combo(int ID, List<int> combo){
+		this.ID = ID;
+		this.combo = combo;
+	}
+
+
 	public int GetID(){
 		return ID;
 	}

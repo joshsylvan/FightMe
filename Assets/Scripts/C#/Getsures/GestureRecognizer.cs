@@ -11,6 +11,7 @@ public class GestureRecognizer {
 
 
 	public List<Gesture> ClassifyGestures(List<Gesture> unclassifiedGestures, List<Gesture> classifiedGestures, float minRatio, float maxPathDistance, float maxPointDistance){
+		Debug.Log ("CALSSIFY");
 		combosToChange = new List<Pair>();
 		List<Gesture> gestures = classifiedGestures;
 
@@ -27,7 +28,7 @@ public class GestureRecognizer {
 				if (result == -1) {
 					gestures.Add (currentGesture);
 				} else {
-//					combosToChange.Add (new Pair (int.Parse (currentGesture.GetName ()), int.Parse (classifiedGestures [result].GetName ())));
+					combosToChange.Add (new Pair (int.Parse (currentGesture.GetName ()), int.Parse (classifiedGestures [result].GetName ())));
 					gestures [result] = NormalizeGesture (currentGesture, gestures [result]);
 				}
 			} else { // if there are none createa new class
@@ -138,17 +139,37 @@ public class GestureRecognizer {
 	}
 
 	Gesture NormalizeGesture(Gesture p1, Gesture gesture){   // TODO Maybe normalize based of the time too.
+		Gesture newGesture = new Gesture(gesture.GetName());
 		for(int i = 0; i < gesture.GetMatrixArray().Length; i++){
-			gesture.GetMatrixArray () [i].SetColumn (3, new Vector4 (
-				(p1.GetMatrixArray()[i].GetPosition().x + gesture.GetMatrixArray()[i].GetPosition().x)/2,
+//			newGesture.GetMatrixArray () [i].SetColumn (3, new Vector4 (
+//				(p1.GetMatrixArray()[i].GetPosition().x + gesture.GetMatrixArray()[i].GetPosition().x)/2,
+//				(p1.GetMatrixArray()[i].GetPosition().y + gesture.GetMatrixArray()[i].GetPosition().y)/2,
+//				(p1.GetMatrixArray()[i].GetPosition().z + gesture.GetMatrixArray()[i].GetPosition().z)/2
+//			));
+//			newGesture.SetTimeIndex (i, (p1.GetDeltaTimes () [i] + gesture.GetDeltaTimes () [i]) / 2);
+			Vector3 newPos = new Vector3(
+				(p1.GetMatrixArray()[i].GetPosition().x + gesture.GetMatrixArray()[i].GetPosition().x)/2, 
 				(p1.GetMatrixArray()[i].GetPosition().y + gesture.GetMatrixArray()[i].GetPosition().y)/2,
 				(p1.GetMatrixArray()[i].GetPosition().z + gesture.GetMatrixArray()[i].GetPosition().z)/2
-			));
-			gesture.SetTimeIndex (i, (p1.GetDeltaTimes () [i] + gesture.GetDeltaTimes () [i]) / 2);
+			);
+			Vector3 newScale = new Vector3(
+				(p1.GetMatrixArray()[i].GetScale().x + gesture.GetMatrixArray()[i].GetScale().x)/2, 
+				(p1.GetMatrixArray()[i].GetScale().y + gesture.GetMatrixArray()[i].GetScale().y)/2,
+				(p1.GetMatrixArray()[i].GetScale().z + gesture.GetMatrixArray()[i].GetScale().z)/2
+			);
+
+			newGesture.AddMatrix(Matrix4x4.TRS( newPos, gesture.GetMatrixArray () [i].GetRotation (), newScale));
+			newGesture.AddTime ((p1.GetDeltaTimes () [i] + gesture.GetDeltaTimes () [i]) / 2);
+
+			Debug.Log (p1.GetMatrixArray()[i].GetPosition().x + " + " +gesture.GetMatrixArray()[i].GetPosition().x + "  :  " + newGesture.GetMatrixArray()[i].GetPosition().x);
 		}
-		return gesture;
+		return newGesture;
 	}
 
+
+	public List<Pair> GetCombosToChange(){
+		return combosToChange;
+	}
 	/*  START REFACTOR HERE
 
 

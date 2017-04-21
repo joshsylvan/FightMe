@@ -101,17 +101,6 @@ public class NewtonGestureRecorderMatrix : MonoBehaviour {
 				}
 				leftHandMatrix = new List<Matrix4x4> ();
 				leftHandTimes = new List<float> ();
-				/*
-				//Point[] gesturePosition = NormalizeListPosition (leftControllerPoints, 20);
-				//Quaternion[] gestureRotation = NormalizeListRotation (leftControllerRotations, 20);
-				//leftControllerPoints = new List<Point> ();
-				//leftControllerRotations = new List<Quaternion> ();
-				if (gesturePosition != null) {
-					Gesture tGesture = new Gesture ( "" + gestureIDLeft++, gesturePosition, gestureRotation );
-					unclassifiedGesturesLeft.Add (tGesture);
-					comboRecorder.AddGestureToCurrentComboLeft (int.Parse( tGesture.GetName ()));
-				}
-				*/
 			} else if (hand.Equals(rightHand)){
 				rightHandDeltaTime = 0;
 				if (rightHandMatrix.Count >= 20) {
@@ -121,17 +110,6 @@ public class NewtonGestureRecorderMatrix : MonoBehaviour {
 				}
 				rightHandMatrix = new List<Matrix4x4> ();
 				rightHandTimes = new List<float> ();
-				/*
-				//Point[] gesturePosition = NormalizeListPosition (rightControllerPoints, 20);
-				//Quaternion[] gestureRotation = NormalizeListRotation (rightControllerRotations, 20);
-				//rightControllerPoints = new List<Point> ();
-				//rightControllerRotations = new List<Quaternion> ();
-				if (gesturePosition != null) {
-					Gesture tGesture = new Gesture ( "" + gestureIDRight++, gesturePosition, gestureRotation );
-					unclassifiedGesturesRight.Add (tGesture);
-					comboRecorder.AddGestureToCurrentComboRight (int.Parse( tGesture.GetName ()));
-				}
-				*/
 			}
 		}
 	}
@@ -230,5 +208,4 @@ public class NewtonGestureRecorderMatrix : MonoBehaviour {
 
 		}
 	}
-
 }

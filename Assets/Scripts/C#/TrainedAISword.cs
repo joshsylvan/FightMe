@@ -6,7 +6,7 @@ public class TrainedAISword : MonoBehaviour {
 
 	Animation anim;
 	List<Gesture> gestures;
-	List<AnimationClip> animationClips;
+	List<AnimationClip> animationClips, animationToIdle;
 	int index = 0;
 	int playIndex = 0;
 	bool cycleAnimations = false;
@@ -14,6 +14,7 @@ public class TrainedAISword : MonoBehaviour {
 	void Awake(){
 		anim = GetComponent<Animation> ();
 		animationClips = new List<AnimationClip> ();
+		animationToIdle = new List<AnimationClip> ();
 	}
 
 	// Use this for initialization
@@ -35,7 +36,7 @@ public class TrainedAISword : MonoBehaviour {
 	}
 
 	public void CreateAnimationClipsFromGestures(List<Gesture> gestures){
-		
+//		Debug.Log ("GESTUREANIMC  " + gestures.Count);
 		animationClips = new List<AnimationClip> ();
 		this.gestures = gestures;
 		foreach (Gesture g in this.gestures) {
@@ -78,6 +79,36 @@ public class TrainedAISword : MonoBehaviour {
 			animationClips.Add (clip);
 			anim.AddClip(clip, ""+index++);
 		}
+
+		AnimationClip clipI = new AnimationClip ();
+		clipI.legacy = true;
+
+		AnimationCurve curveI;
+		// Position Keyframes
+		Keyframe[] keysXI = new Keyframe[1]{new Keyframe(0, 0.274f)};
+		Keyframe[] keysYI = new Keyframe[1]{ new Keyframe (0, -0.215f) };
+		Keyframe[] keysZI = new Keyframe[1]{ new Keyframe (0, 0) };
+		// Rotation Keyframes
+		Keyframe[] keysRXI = new Keyframe[1]{new Keyframe(0, -0.49f)};
+		Keyframe[] keysRYI = new Keyframe[1]{new Keyframe(0, 0.34f)};
+		Keyframe[] keysRZI = new Keyframe[1]{new Keyframe(0, 0.08f)};
+		Keyframe[] keysRWI = new Keyframe[1]{new Keyframe(0, 0.79f)};
+		curveI = new AnimationCurve(keysXI);
+		clipI.SetCurve ("", typeof(Transform), "localPosition.x", curveI);
+		curveI = new AnimationCurve(keysYI);
+		clipI.SetCurve ("", typeof(Transform), "localPosition.y", curveI);
+		curveI = new AnimationCurve(keysZI);
+		clipI.SetCurve ("", typeof(Transform), "localPosition.z", curveI);
+		curveI = new AnimationCurve(keysRXI);
+		clipI.SetCurve ("", typeof(Transform), "localRotation.x", curveI);
+		curveI = new AnimationCurve(keysRYI);
+		clipI.SetCurve ("", typeof(Transform), "localRotation.y", curveI);
+		curveI = new AnimationCurve(keysRZI);
+		clipI.SetCurve ("", typeof(Transform), "localRotation.z", curveI);
+		curveI = new AnimationCurve(keysRWI);
+		clipI.SetCurve ("", typeof(Transform), "localRotation.w", curveI);
+		animationClips.Add (clipI);
+		anim.AddClip(clipI, ""+index++);
 		/* NEEDS REFACTOR
 		*/ //END
 	}
