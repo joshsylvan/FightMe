@@ -12,17 +12,28 @@ public class TreeNode {
 		links = new List<TreeLink> ();
 	}
 
+	/// <summary>
+	/// Adds the link.
+	/// </summary>
+	/// <param name="link">Link.</param>
 	public void AddLink(TreeLink link){
 		this.links.Add (link);
 	}
 
+	/// <summary>
+	/// Gets the node.
+	/// </summary>
+	/// <returns>The node.</returns>
 	public int GetNode(){
 		return ID;
 	}
 
+	/// <summary>
+	/// Creates the tree from combo.
+	/// </summary>
+	/// <param name="c">C.</param>
 	public void CreateTreeFromCombo(Combo c){
 		if (c.GetCombo ().Count > 0) {
-//			Debug.Log (c.GetCombo () [0]);
 			TreeLink l = new TreeLink ();
 			TreeNode n = new TreeNode (c.GetCombo () [0]);
 			l.SetTailNode (n);
@@ -49,18 +60,23 @@ public class TreeNode {
 			// Get Total Links
 			int totalQ = GetNumberOfRelations();
 			foreach(TreeLink li in links){
-//				Debug.Log (li.GetFrequency () + "  /  " + totalQ);
 				li.SetWeight( ((float) li.GetFrequency()) / ((float) totalQ) );
 			}
-//			Debug.Log ("ID " + ID + " : " + totalQ);
-
 		}
 	}
 
+	/// <summary>
+	/// Gets the links.
+	/// </summary>
+	/// <returns>The links.</returns>
 	public List<TreeLink> GetLinks(){
 		return links;
 	}
 
+	/// <summary>
+	/// Gets the number of relations.
+	/// </summary>
+	/// <returns>The number of relations.</returns>
 	public int GetNumberOfRelations(){
 		int totalQ = 0;
 		foreach (TreeLink li in links) {
@@ -69,6 +85,11 @@ public class TreeNode {
 		return totalQ;
 	}
 
+	/// <summary>
+	/// Checks if a link already exists when added to a tree so the wieghts can be ajusted.
+	/// </summary>
+	/// <returns>The link exist.</returns>
+	/// <param name="l">L.</param>
 	public int DoesLinkExist(TreeLink l){
 		for (int i = 0; i < links.Count; i++) {
 				if (links [i].GetTailNode ().GetNode () == l.GetTailNode ().GetNode ()) {
