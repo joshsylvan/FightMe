@@ -158,4 +158,8 @@ public class ComboRecorder : MonoBehaviour{
 		}
 	}
 
+	public List<Combo> GetCombosRight(){
+		return comboRightHand;
+	}
+
 }

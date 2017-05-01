@@ -29,6 +29,7 @@ public class NaiveAI_Runner : MonoBehaviour {
 	void Update () {
 		transform.LookAt (player.transform); // Look at the player
 		transform.rotation = Quaternion.Euler (new Vector3(0, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
+
 		if (!stutter) {
 			if (!flee) {
 				nma.SetDestination (player.transform.position);

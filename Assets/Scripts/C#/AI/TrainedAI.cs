@@ -9,42 +9,53 @@ using UnityEngine.AI;
 public class TrainedAI : MonoBehaviour {
 	// Gesture Loading when gestures are loaded from CSV files.
 	GestureLoader gl;
-	List<Gesture> Ugestures, gestures;
+	List<Gesture> Ugestures, gestures = new List<Gesture>();
 	GestureRecognizer gr;
+	bool setUp = true;
+
+	// Combo Prediction Variables
+	GameObject dataRecorder;
+	ComboPredictor cp;
+	GestureRecognizer recognizer;
 
 	// Navigation Variabls
 	public NavMeshAgent nma;
 	GameObject player;
 	GameObject nodes, closeNodes; // Nodes to navigate to.
+	public GameObject shield;
 	bool flee;
-	// Animatino variables
+	// Animation variables
 	public bool stutter;
 	public Animation sword;
-	public TrainedAISword ai;
+	public TrainedAISword aiSword;
 
-
-	public int behaviour = 0; // Behaviout model to use
-
-	// Defensive
+	// Defensive Behaviour
 	bool defend = true;
 	bool strafe = false;
 	bool nearPlayer = false;
 	float strafeTimer;
 	int strafeDirection;
 	int defensiveSate = 0;
-	// Offensive
+
+	// Offensive Behaviour
 	int offensiveState = 0;
 	bool offensiveStrafe = false;
 	int attacks = 0;
+
+	// Parry Variables
+	float OGParryCounter = 1f;
+	float parryCounter = 1f;
 
 	/// <summary>
 	/// Awake this instance.
 	/// </summary>
 	void Awake(){
 		nma = GetComponent<NavMeshAgent> ();
+		dataRecorder = GameObject.Find ("DataRecorder");
 		player = GameObject.Find ("Head");
 		nodes = GameObject.Find ("Nodes");
 		closeNodes = GameObject.Find ("NodesCloser");
+		recognizer = new GestureRecognizer ();
 	}
 
 	/// <summary>
@@ -52,15 +63,13 @@ public class TrainedAI : MonoBehaviour {
 	/// </summary>
 	void Start () {
 		// Gesture Loader
-		gl = GetComponent<GestureLoader>();
-		Ugestures = gl.GetClassifiedGesturesM ();
-		gr = new GestureRecognizer (); 
-		gestures = gr.ClassifyGestures(Ugestures, new List<Gesture>(), 0.8f, 0.3f, 0.3f);
-		Debug.Log ("Gestu  " + gestures.Count);
-		ai.CreateAnimationClipsFromGestures (gestures);
-		sword.Play (""+gestures.Count);
-//		ai.CylcleAnimations()
-
+		//gl = GetComponent<GestureLoader>();
+		//Ugestures = gl.GetClassifiedGesturesM ();
+		//gr = new GestureRecognizer (); 
+		//gestures = gr.ClassifyGestures(Ugestures, new List<Gesture>(), 0.8f, 0.3f, 0.3f);
+		//Debug.Log ("Gestu  " + gestures.Count);
+		//aiSword.CreateAnimationClipsFromGestures (gestures);
+		//ai.CylcleAnimations()
 		// AI movement
 		flee = false;
 		stutter = false;
@@ -69,22 +78,61 @@ public class TrainedAI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.LookAt (player.transform);
-		transform.rotation = Quaternion.Euler (new Vector3(0, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
-		int choice = behaviour % 2;
-		switch(choice){
-		case 0:
-			DefensiveBehaviour ();
-			break;
-		case 1:
-			DefensiveBehaviour ();
-			break;
-		default:
-			DefensiveBehaviour ();
-			break;
+		int res = -1;
+		if (dataRecorder.GetComponent<GestureRecorder> ().GetUnclassifiedGesturesRight ().Count > 1) {
+			res = recognizer.NaiveRecognizer (
+				dataRecorder.GetComponent<GestureRecorder> ().GetUnclassifiedGesturesRight () [
+					dataRecorder.GetComponent<GestureRecorder> ().GetUnclassifiedGesturesRight ().Count - 1].GetPositionList ().ToArray (),
+				aiSword.GetGestures (),
+				0.8f,
+				0.3f,
+				0.3f
+			);
+			if (res != -1) {
+				Debug.Log ((  PredictNextGesture( int.Parse(aiSword.GetGestures () [res].GetName())) ));
+			} else {
+				Debug.Log (-1);
+			}
 		}
-		DefensiveBehaviour();
-		OffensiveBehaviour();
+		if (setUp) {
+			transform.LookAt (player.transform);
+			transform.rotation = Quaternion.Euler (new Vector3 (0, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
+
+			if (res == -1) {
+				shield.GetComponent<TrainedAIShield> ().StartFollow ();
+			} else {
+				shield.GetComponent<TrainedAIShield> ().StopFollow ();
+				shield.transform.localPosition = new Vector3 (
+					shield.transform.localPosition.x, 
+					aiSword.GetGestures () [res].GetMatrixArray()[9].GetPosition().y, 
+					shield.transform.localPosition.z
+				);
+			}
+
+			if (!aiSword.IsParry ()) {
+				if (GetComponent<AICombatManager> ().health <= 3) {
+					OffensiveBehaviour ();
+				} else {
+					DefensiveBehaviour ();
+				}
+			} else {
+				// Play Parry
+				sword.Stop ();
+				shield.GetComponent<TrainedAIShield> ().StopFollow ();
+				sword.gameObject.transform.localPosition = new Vector3 (0.3f, -0.16f, -0.11f);
+				sword.gameObject.transform.localRotation = new Quaternion (-0.5f, 0.44f, -0.04f, 0.73f);
+				shield.transform.localPosition = new Vector3 (-0.594f, 0.815f, -0.073f);
+				shield.transform.localRotation = new Quaternion (0.44f, -0.46f, 0.34f, 0.67f);
+				parryCounter -= Time.deltaTime;
+				if (parryCounter <= 0) {
+					parryCounter = OGParryCounter;
+					shield.GetComponent<TrainedAIShield> ().StartFollow ();
+					shield.transform.localPosition = new Vector3 (-0.25f, -0.847f, 0.205f);
+					shield.transform.localRotation = new Quaternion (0.64f, -1.2f, 0.14f, -0.744f);
+					aiSword.EndParry ();
+				}
+			}
+		}
 
 	}
 
@@ -92,8 +140,10 @@ public class TrainedAI : MonoBehaviour {
 	/// Offensive behaviour model for the Trained AI.
 	/// </summary>
 	void OffensiveBehaviour(){
+		int rrr = Random.Range (0, sword.GetClipCount ()-1);
 		switch (offensiveState) {
 		case 0:
+			sword.Play (""+(sword.GetClipCount()-1));
 			nma.SetDestination (closeNodes.transform.GetChild (Random.Range (0, closeNodes.transform.childCount)).transform.position);
 			offensiveState = 1;
 			break;
@@ -111,7 +161,6 @@ public class TrainedAI : MonoBehaviour {
 				} else {
 					offensiveState = 2;
 					offensiveStrafe = false;
-					nma.stoppingDistance = 1.5f;
 					nma.SetDestination (player.transform.position);
 					nma.Resume ();
 				}
@@ -125,11 +174,11 @@ public class TrainedAI : MonoBehaviour {
 			break;
 		case 3:
 			if (!sword.isPlaying && attacks <= 0) {
-				sword.Play (""+(gestures.Count));
+				sword.Play (""+(sword.GetClipCount()-1));
 				offensiveState = 0;
 			} else if (!sword.isPlaying && attacks >= 1) {
 				attacks--;
-				sword.Play (Random.Range (0, gestures.Count-1)+"");
+				sword.Play (""+(rrr));
 			}
 			break;
 		}
@@ -139,14 +188,15 @@ public class TrainedAI : MonoBehaviour {
 	/// Defensives the behaviour mode for the Trained AI.
 	/// </summary>
 	void DefensiveBehaviour(){
+		int rrr = Random.Range (0, sword.GetClipCount ()-1);
 //		transform.RotateAround (player.transform.position, Vector3.down, 20f * Time.deltaTime);
 		switch (defensiveSate) {
 		case 0:
+			sword.Play (""+(sword.GetClipCount()-1));
 			sword.gameObject.transform.position = Vector3.MoveTowards (sword.gameObject.transform.position, new Vector3 (0, 0, 0), 2f);
 			if (nma.remainingDistance <= nma.stoppingDistance) {
 				nma.SetDestination (nodes.transform.GetChild (Random.Range (0, nodes.transform.childCount)).transform.position);
 				defensiveSate = 1;
-				nma.stoppingDistance = 0f;
 			}
 			break;
 		case 1:
@@ -165,7 +215,6 @@ public class TrainedAI : MonoBehaviour {
 					if (nearPlayer) {
 						defensiveSate = 3;
 						nearPlayer = false;
-						nma.stoppingDistance = 1.5f;
 						nma.SetDestination (player.transform.position);
 						nma.Resume ();
 					} else {
@@ -173,7 +222,6 @@ public class TrainedAI : MonoBehaviour {
 						case 0:
 						//Attack
 							defensiveSate = 3;
-							nma.stoppingDistance = 1.5f;
 							nma.SetDestination (player.transform.position);
 							nma.Resume ();
 							break;
@@ -195,7 +243,7 @@ public class TrainedAI : MonoBehaviour {
 			break;
 		case 3:
 			if (nma.remainingDistance <= nma.stoppingDistance) {
-				sword.Play (Random.Range (0, gestures.Count)+"");
+				sword.Play (rrr+"");
 				defensiveSate = 4;
 			}
 			break;
@@ -204,49 +252,40 @@ public class TrainedAI : MonoBehaviour {
 				flee = false;
 				stutter = false;
 				nearPlayer = false;
+				sword.Play ( sword.GetClipCount()-1+"");
 				defensiveSate = 0;
 			}
 			break;
 		default:
 			break;
 		}
-//			nma.SetDestination (nodes.transform.GetChild (Random.Range (0, nodes.transform.childCount)).transform.position);
-//		if (defend) {
-//			if (running) {
-//				if (nma.remainingDistance <= nma.stoppingDistance) {
-//					strafe = true;
-//					strafeTimer = Random.Range (3, 10);
-//					strafeDirection = Random.Range (0, 2);
-//					running = false;
-//					Debug.Log ("asdasd");
-//				}
-//			}
-//			if (strafe) {
-//				switch (strafeDirection) {
-//				case 0:
-//					transform.RotateAround (player.transform.position, Vector3.up, 20f * Time.deltaTime);
-//					break;
-//				case 1:
-//					transform.RotateAround (player.transform.position, Vector3.down, 20f * Time.deltaTime);
-//					break;
-//				}
-//			}
-//		}
-
 	}
 
-	/// <summary>
-	/// Changes the behaviour.
-	/// </summary>
-	public void ChangeBehaviour(){
-		behaviour++;
+	public void BuildComboPredictions(List<Combo> combos){
+		foreach (Combo c in combos) {
+			string combo = "";
+			foreach (int i in c.GetCombo()) {
+				combo += i + "";
+			}
+			Debug.Log (combo);
+		}
+		cp = new ComboPredictor (combos);
+		cp.CreateTreesFromCombos ();
 	}
 
 	/// <summary>
 	/// Predicts the next gesture.
 	/// </summary>
 	/// <returns>The next gesture.</returns>
-	public int PredictNextGesture(){
-		return 0;
+	public int PredictNextGesture(int i){
+		return cp.PredictSequence(new List<int>(){i});
+	}
+
+	public TrainedAISword GetSword(){
+		return aiSword;
+	}
+
+	public void SetUpComplete(){
+		this.setUp = true;
 	}
 }

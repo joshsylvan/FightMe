@@ -100,6 +100,7 @@ public class ComboPredictor {
 				comboTrees [result].GetRootNode ().CreateTreeFromCombo (combos [i]);
 			}
 		}
+		Debug.Log (comboTrees.Count + " : number of trees.");
 	}
 
 	/// <summary>

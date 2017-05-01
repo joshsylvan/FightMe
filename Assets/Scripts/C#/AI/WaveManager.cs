@@ -9,7 +9,9 @@ public class WaveManager : MonoBehaviour {
 
 	GameObject enemies;
 	GameObject runner, warrior;
+	GameObject trainedAI;
 	public GameObject[] spawnPoints;
+	GestureRecorder gr;
 
 	public int waveState = 0;
 
@@ -23,9 +25,11 @@ public class WaveManager : MonoBehaviour {
 	/// </summary>
 	void Start () {
 		enemies = GameObject.Find ("Enemies");
+		gr = GameObject.Find ("DataRecorder").GetComponent<GestureRecorder>();
 		runner = Resources.Load ("Prefab/NPC/Runner2") as GameObject;
 		warrior = Resources.Load ("Prefab/NPC/NaiveWarrior") as GameObject;
-		runnersToSpawn = 5;
+		trainedAI = Resources.Load ("Prefab/NPC/TrainedAI") as GameObject;
+		runnersToSpawn = 1;
 	}
 	
 	// Update is called once per frame and spawns the specific enemies when needed depending on wave state.
@@ -38,7 +42,7 @@ public class WaveManager : MonoBehaviour {
 				SpawnRunner ();
 			}
 			if (runnersToSpawn <= 0 && enemies.transform.childCount <= 0) {
-				waveState++;
+				waveState = 3;
 				runnersToSpawn = 5;
 				warriorsToSpawn = 2;
 				waveCounter = 0;
@@ -71,6 +75,10 @@ public class WaveManager : MonoBehaviour {
 			break;
 		case 3:
 			// Do learning Build an AI and then apply to a shell.
+			SpawnTrainedAI ();
+			waveState++;
+			break;
+		case 4:
 			break;
 		}
 	}
@@ -99,6 +107,22 @@ public class WaveManager : MonoBehaviour {
 			tWarrior.transform.position = spawnPoints [Random.Range (0, 4)].transform.position;
 			tWarrior = Instantiate (tWarrior);
 			tWarrior.transform.SetParent (enemies.transform);
+		}
+	}
+
+	void SpawnTrainedAI(){
+		gr.ClassifyGestures ();
+		if (gr.GetClassifiedGesturesRight ().Count > 1) {
+			Debug.Log (gr.GetClassifiedGesturesRight ().Count);
+			trainedAI = Instantiate (trainedAI);
+			trainedAI.transform.position = spawnPoints [Random.Range (0, 4)].transform.position;
+			trainedAI.transform.SetParent (enemies.transform);
+			trainedAI.GetComponent<TrainedAI> ().GetSword ().CreateAnimationClipsFromGestures (gr.GetClassifiedGesturesRight ());
+			trainedAI.GetComponent<TrainedAI> ().BuildComboPredictions (gr.GetComboRecorder().GetCombosRight());
+			trainedAI.GetComponent<TrainedAI> ().SetUpComplete ();
+
+		} else {
+			//start waves again until more gestures are found
 		}
 	}
 }

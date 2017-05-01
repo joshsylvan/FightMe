@@ -32,6 +32,24 @@ public class AICombatManager : MonoBehaviour {
 					transform.GetChild (0).transform.SetParent (null);
 					Destroy (GetComponent<NaiveAI_Runner> ());
 					Destroy (GetComponent<NavMeshAgent> ());
+				} else if (GetComponent<TrainedAI> () != null){
+					//sword
+					Destroy (transform.GetChild (0).gameObject.transform.GetChild (0).GetComponent<Animation> ());
+					Destroy (transform.GetChild (0).gameObject.transform.GetChild (0).GetComponent<TrainedAISword> ());
+					transform.GetChild (0).gameObject.transform.GetChild (0).GetComponent<Rigidbody> ().isKinematic = false;
+					transform.GetChild (0).SetParent (null);
+
+					//shield
+					Destroy (transform.GetChild (2).GetComponent<TrainedAIShield> ());
+					transform.GetChild (2).GetComponent<Rigidbody> ().isKinematic = false;
+					transform.GetChild (2).SetParent (null);
+
+					//body
+					GetComponent<Collider>().isTrigger = false;
+					GetComponent<Rigidbody>().useGravity = true;
+					Destroy (GetComponent<TrainedAI> ());
+					Destroy (GetComponent<Animator> ());
+					Destroy (GetComponent<NavMeshAgent> ());
 				}
 
 				dropWeapons = false;

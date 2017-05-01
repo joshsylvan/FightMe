@@ -7,19 +7,20 @@ using UnityEngine;
 /// </summary>
 public class TrainedAISword : MonoBehaviour {
 
-	Animation anim; // Animation ofbject to play Gestures.
+	public Animation anim; // Animation ofbject to play Gestures.
 	List<Gesture> gestures; // List of all known classified gestures
-	List<AnimationClip> animationClips; // List of animation attacks based on gestures.
+	List<AnimationClip> animationClips = new List<AnimationClip> (); // List of animation attacks based on gestures.
 	int index = 0; // index is used to signify the number of animations.
 	int playIndex = 0; // current gesture playing
 	bool cycleAnimations = false;
+	bool parry = false;
 
 	/// <summary>
 	/// Awake this instance.
 	/// </summary>
 	void Awake(){
-		anim = GetComponent<Animation> ();
-		animationClips = new List<AnimationClip> ();
+		//anim = GetComponent<Animation> ();
+		//animationClips = new List<AnimationClip> ();
 	}
 	
 	/// <summary>
@@ -44,7 +45,7 @@ public class TrainedAISword : MonoBehaviour {
 	public void CreateAnimationClipsFromGestures(List<Gesture> gestures){
 		animationClips = new List<AnimationClip> ();
 		this.gestures = gestures;
-		foreach (Gesture g in this.gestures) {
+		foreach (Gesture g in gestures) {
 			AnimationClip clip = new AnimationClip ();
 			clip.legacy = true;
 
@@ -82,7 +83,7 @@ public class TrainedAISword : MonoBehaviour {
 			curve = new AnimationCurve(keysRW);
 			clip.SetCurve ("", typeof(Transform), "localRotation.w", curve);
 			animationClips.Add (clip);
-			anim.AddClip(clip, ""+index++);
+			//anim.AddClip(clip, ""+index++);
 		}
 
 		AnimationClip clipI = new AnimationClip ();
@@ -113,9 +114,17 @@ public class TrainedAISword : MonoBehaviour {
 		curveI = new AnimationCurve(keysRWI);
 		clipI.SetCurve ("", typeof(Transform), "localRotation.w", curveI);
 		animationClips.Add (clipI);
-		anim.AddClip(clipI, ""+index++);
+		//anim.AddClip(clipI, ""+index++);
+		//anim.Play (""+gestures.Count);
+		//Debug.Log ("Created " + animationClips.Count + " animations from Gestures");
 		/* NEEDS REFACTOR
 		*/ //END
+		index = 0;
+		foreach (AnimationClip a in animationClips) {
+			anim.AddClip (a, ""+index++);
+		}
+
+		Debug.Log ("Created " + anim.GetClipCount() + " animations from Gestures");
 	}
 
 	/// <summary>
@@ -147,5 +156,24 @@ public class TrainedAISword : MonoBehaviour {
 	/// <param name="index">Index to play..</param>
 	public void PlayClip(int index){
 		anim.Play ("" + index);
+	}
+
+	void OnCollisionEnter(Collision col){
+		if (col.gameObject.tag == "PlayerWeapon" || col.gameObject.tag == "PlayerShield") {
+			parry = true;
+
+		}
+	}
+
+	public List<Gesture> GetGestures(){
+		return gestures;
+	}
+
+	public void EndParry(){
+		this.parry = false;
+	}
+
+	public bool IsParry(){
+		return parry;
 	}
 }

@@ -245,12 +245,30 @@ public class GestureRecorder : MonoBehaviour {
 	public void ClassifyGestures(){
 
 		gestureRecogniser = new GestureRecognizer ();
-		List<Gesture> classifiedGesturesLeft = gestureRecogniser.ClassifyGestures (this.unclassifiedGesturesLeft, this.classifiedGesturesLeft, 0.8f, 0.3f, 0.3f);
-		List<Gesture> classifiedGesturesRight = gestureRecogniser.ClassifyGestures (this.unclassifiedGesturesRight, this.classifiedGesturesRight, 0.8f, 0.3f, 0.3f);
+		//classifiedGesturesLeft = gestureRecogniser.ClassifyGestures (this.unclassifiedGesturesLeft, this.classifiedGesturesLeft, 0.8f, 0.3f, 0.3f);
+		classifiedGesturesRight = gestureRecogniser.ClassifyGestures (this.unclassifiedGesturesRight, this.classifiedGesturesRight, 0.8f, 0.3f, 0.3f);
 
-		unclassifiedGesturesLeft = new List<Gesture> ();
+		comboRecorder.UpdateComboIDsRight(gestureRecogniser.GetCombosToChange().ToArray());
+
+		//unclassifiedGesturesLeft = new List<Gesture> ();
 		unclassifiedGesturesRight = new List<Gesture> ();
 
+	}
+
+	public List<Gesture> GetUnclassifiedGesturesRight(){
+		return unclassifiedGesturesRight;
+	}
+
+	public List<Gesture> GetClassifiedGesturesRight(){
+		return classifiedGesturesRight;
+	}
+
+	public List<Gesture> GetClassifiedGesturesLeft(){
+		return classifiedGesturesLeft;
+	}
+
+	public ComboRecorder GetComboRecorder(){
+		return comboRecorder;
 	}
 
 }
